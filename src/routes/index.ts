@@ -1,12 +1,26 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import type { RouteRecordRaw } from 'vue-router'
 
-const routes: RouteRecordRaw[] = []
+const Layout = () => import('@/pages/layout/index.vue')
+const Home = () => import('@/pages/home/index.vue')
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/home',
+        component: Home
+      }
+    ]
+  }
+]
 
 const router = createRouter({
   routes,
-  history: createWebHashHistory()
+  history: createWebHistory()
 })
 
 export default router

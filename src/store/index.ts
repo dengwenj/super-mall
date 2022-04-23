@@ -1,8 +1,9 @@
-import { createStore, Store, useStore as useVuexStore } from 'vuex'
+import { createStore, useStore as useVuexStore } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
 import { user, cart, category } from './modules'
 
+import type { Store } from 'vuex'
 import type { IRootState, IStore } from './types'
 
 const store = createStore<IRootState>({

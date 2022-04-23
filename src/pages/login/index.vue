@@ -3,6 +3,5 @@
 </script>
 
 <template>
-  <!-- 一级路由 -->
-  <router-view />
+  <div>login</div>
 </template>
