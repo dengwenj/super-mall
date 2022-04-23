@@ -18,10 +18,8 @@
 </template>
 
 <style lang="less">
-@import '../../assets/styles/mixins.less';
-
 .container {
-  .dwj(100px)
+  color: @themeColor;
+  .hoverShadow()
 }
-
 </style>
