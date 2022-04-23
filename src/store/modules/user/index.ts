@@ -20,8 +20,8 @@ const user: Module<IUserState, IRootState> = {
     }
   },
   mutations: {
-    updateId(state, payload) {
-      state.profile.id = payload.id
+    setUser(state, payload) {
+      state.profile = payload
     }
   }
 }
