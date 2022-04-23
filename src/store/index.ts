@@ -3,7 +3,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 import { user, cart, category } from './modules'
 
-import type { IRootState } from './types'
+import type { IRootState, IStore } from './types'
 
 const store = createStore<IRootState>({
   state: {
@@ -22,6 +22,6 @@ const store = createStore<IRootState>({
   ]
 })
 
-export const useStore = <T = any>(): Store<T> => useVuexStore()
+export const useStore = (): Store<IStore> => useVuexStore()
 
 export default store

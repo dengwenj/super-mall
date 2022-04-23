@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@/store'
 
-import type { IStore } from '@/store/types'
-
-const store = useStore<IStore>()
+const store = useStore()
 
 const handleId = () => {
   store.commit('user/updateId', { id: 101 })
