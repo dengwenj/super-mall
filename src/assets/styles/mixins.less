@@ -1,0 +1,16 @@
+// 可以写函数，封装
+.dwj(@width) {
+  width: @width;
+}
+.ww {
+  .dwj(100px)
+}
+
+// 函数
+.hoverShadow() {
+  transition: all .5s;
+  &:hover {
+    transform: translate3d(0, -3px, 0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .2);
+  }
+}
