@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useStore } from '@/store'
 
-const message = ref('hello dengwj')
+import type { IStore } from '@/store/types'
+
+const store = useStore<IStore>()
+
+const handleId = () => {
+  store.commit('user/updateId', { id: 101 })
+}
+
 </script>
 
 <template>
-  <div>{{ message }}</div>
+  <div>{{ store.state.user.profile.id }}</div>
+  <button @click="handleId">id</button>
 </template>
