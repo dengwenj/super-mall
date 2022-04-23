@@ -4,7 +4,6 @@ import { useStore } from '@/store'
 const store = useStore()
 
 const handleId = () => {
-  store.commit('user/updateId', { id: 101 })
 }
 
 </script>
