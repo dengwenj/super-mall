@@ -1,13 +1,11 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
-import { useStore } from '@/store'
+import store from '@/store'
 import router from '@/routes'
 import { baseURL } from '../../address'
 
 import type { AxiosRequestConfig } from 'axios'
- 
-const store = useStore()
 
 export default function request<T = any>(options: AxiosRequestConfig): Promise<T> {
   return new Promise(async (resolve, reject) => {
@@ -18,7 +16,8 @@ export default function request<T = any>(options: AxiosRequestConfig): Promise<T
 
     // 请求拦截
     instance.interceptors.request.use((config) => {
-      const { token } = store.state.user.profile
+      const superMall = JSON.parse(localStorage.getItem('super-mall') || '')
+      const { token } = superMall.user.profile
       if (token) {
         config.headers!.Authorization = `Bearer ${token}`
       }
