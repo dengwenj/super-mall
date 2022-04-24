@@ -3,7 +3,7 @@
     <div class="container">
       <h1 class="logo">
         <router-link to="/">
-          <img class="img" src="../../assets/images/dwjww.png" alt="">
+          <img class="img" src="../../assets/images/dwjww.png" alt="购物商城">
           <div class="name">购物商城</div>
         </router-link>
       </h1>
@@ -59,7 +59,7 @@
         position: absolute;
         top: 41%;
         left: 62%;
-        font-size: 18px;
+        font-size: 19px;
         color: @themeColor;
       }
     }

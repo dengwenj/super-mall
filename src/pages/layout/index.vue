@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/NavBar/index.vue'
 import Header from '@/components/Header/index.vue'
+import Footer from '@/components/Footer/index.vue'
 </script>
 
 <template>
@@ -13,8 +14,7 @@ import Header from '@/components/Header/index.vue'
       <!-- 二级路由 -->
       <router-view />
     </main>
-    <footer>
-      底部
-    </footer>
+    <!-- 底部 -->
+    <Footer />
   </div>
 </template>
