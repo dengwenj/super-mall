@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+
 import { useStore } from '@/store'
+import { getBrand } from '@/services/api/home'
 
 import type { IMenuList } from './types'
 
@@ -8,11 +10,18 @@ import type { IMenuList } from './types'
  * 状态
  */
 const goods = ref<any[]>([])
+const categoryId = ref('')
 const store = useStore()
-const brand = reactive({
+const brand = reactive<{
+  id: string
+  name: string
+  children: { id: string, name: string }[]
+  brands: any[]
+}>({
   id: 'brand',
   name: '品牌',
-  children: [{ id: 'brand-chilren', name: '品牌推荐' }]
+  children: [{ id: 'brand-chilren', name: '品牌推荐' }],
+  brands: []
 })
 const menuList = computed(() => {
   const list: IMenuList[] = store.state.category.list.map((item) => {
@@ -27,19 +36,28 @@ const menuList = computed(() => {
   return list
 })
 
+getBrand().then((res) => {
+  brand.brands = res.result
+})
+
 /**
  * 处理函数
  */
 const handleMousemove = (id: string) => {
   const categoryItem = menuList.value.find((item) => item.id === id)
+  categoryId.value = id
   goods.value = categoryItem?.goods || [] 
 }
 </script>
 
 <template>
-  <div class='home-category'>
+  <div class='home-category' @mouseleave="categoryId = ''">
     <ul class="menu">
-      <li v-for="item in menuList" :key="item.id" @mousemove="handleMousemove(item.id || '')">
+      <li 
+        :class="item.id === categoryId ? 'active' : ''" 
+        v-for="item in menuList" :key="item.id" 
+        @mousemove="handleMousemove(item.id || '')"
+      >
         <router-link :to="`/category/${item.id}`">{{ item.name }}</router-link>
         <template v-if="item.children">
           <router-link 
@@ -55,7 +73,7 @@ const handleMousemove = (id: string) => {
 
     <!-- 弹层 -->
     <div class="layer">
-      <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+      <h4>{{ categoryId === 'brand' ? '品牌' : '分类' }}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <ul v-if="goods.length">
         <li v-for="item in goods" :key="item.id">
           <router-link :to="'/'">
@@ -64,6 +82,19 @@ const handleMousemove = (id: string) => {
               <p class="name ellipsis-2">{{ item.name }}</p>
               <p class="desc ellipsis">{{ item.desc }}</p>
               <p class="price"><i>¥</i>{{ item.price }}</p>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+
+      <ul v-if="categoryId === 'brand'">
+        <li class="brand" v-for="item in brand.brands" :key="item.id">
+          <router-link to="/">
+            <img :src="item.picture" alt="">
+            <div class="info">
+              <p class="place"><i class="iconfont icon-dingwei"></i>{{ item.place }}</p>
+              <p class="name ellipsis">{{ item.name }}</p>
+              <p class="desc ellipsis-2">{{ item.desc }}</p>
             </div>
           </router-link>
         </li>
@@ -94,6 +125,9 @@ const handleMousemove = (id: string) => {
           font-size: 16px;
         }
       }
+    }
+    .active {
+      background: @themeColor;
     }
   }
   .layer {
@@ -158,6 +192,24 @@ const handleMousemove = (id: string) => {
               i {
                 font-size: 16px;
               }
+            }
+          }
+        }
+      }
+      li.brand {
+        height: 180px;
+        a {
+          align-items: flex-start;
+          img {
+            width: 120px;
+            height: 160px;
+          }
+          .info {
+            p {
+              margin-top: 8px;
+            }
+            .place {
+              color: #999;
             }
           }
         }
