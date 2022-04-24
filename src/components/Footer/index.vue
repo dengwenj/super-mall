@@ -14,7 +14,7 @@
           <dt>开发者信息</dt>
           <dd><a style="color: #999999;" href="http://dengwj.vip" target="_brank"><img style="margin: 10px 0;" src="../../assets/images/text.png" alt=""><div>个人简介</div></a></dd>
           <dd><a style="color: #999999;" href="https://github.com/dengwenj" target="_brank"><img style="margin: 10px 0;" src="../../assets/images/github.png" alt=""><div>github</div></a></dd>
-          <dd><a style="color: #999999;" href="https://www.zhihu.com/people/ni-shuo-bu-zou-de-98" target="_brank"><img style="margin: 10px 0;" src="../../assets/images/zhihu.png" alt=""><div>我的知乎</div></a></dd>
+          <dd><a style="color: #999999;" href="https://www.zhihu.com/people/ni-shuo-bu-zou-de-98" target="_brank"><img style="margin: 10px 0;" src="../../assets/images/zhihu.png" alt=""><div>知乎</div></a></dd>
           <dd><a style="color: #999999;" href="https://weibo.com/u/6575004852" target="_branck"><i class="iconfont icon-weibo"></i><div>微博</div></a></dd>
         </dl>
         <dl>
