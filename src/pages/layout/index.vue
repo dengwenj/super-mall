@@ -46,7 +46,7 @@ const handleScroll = ({ fixed }: {
   <!-- 底部 -->
   <Footer />
 
-  <ElBacktop style="width: 50px; height: 50px;" :right="90" :bottom="250">
+  <ElBacktop style="width: 50px; height: 50px;" :right="80" :bottom="250">
     <div class="top">
       <el-icon><ArrowUpBold /></el-icon>
     </div>
