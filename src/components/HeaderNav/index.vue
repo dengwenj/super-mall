@@ -1,21 +1,45 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useStore } from '@/store'
 
+/**
+ * 状态
+ */
+const open = ref(true)
 const store = useStore()
 const categoryList = computed(() => store.state.category.list)
+
+/**
+ * 处理函数
+ */
+const handleOpen = () => {
+  open.value = false
+}
+const handleMouseleave = () => {
+  open.value = true
+}
 </script>
 
 <template>
   <ul class="app-header-nav">
     <li class="home"><router-link to="/">首页</router-link></li>
     <li v-for="item in categoryList" :key="item.id">
-      <router-link to="/">{{ item.name }}</router-link>
-      <div class="layer">
+      <router-link 
+        @click="handleOpen" 
+        :to="`/category/${item.id}`"
+        @mouseleave="handleMouseleave"
+      >
+        {{ item.name }}
+      </router-link>
+      <div :class="open ? 'layer' : 'layer2'">
         <ul>
           <li v-for="item2 in item.children" :key="item2.id">
-            <router-link to="/">
+            <router-link 
+              @mouseleave="handleMouseleave" 
+              @click="handleOpen" 
+              :to="`/category/sub/${item2.id}`"
+            >
               <img :src="item2.picture">
               <p>{{ item2.name }}</p>
             </router-link>
@@ -90,5 +114,8 @@ const categoryList = computed(() => store.state.category.list)
       }
     }
   }
+}
+.layer2 {
+  display: none;
 }
 </style>

@@ -4,6 +4,8 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const Layout = () => import('@/pages/layout/index.vue')
 const Home = () => import('@/pages/home/index.vue')
+const TopCategory = () => import('@/pages/category/index.vue')
+const SubCategory = () => import('@/pages/category/sub.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,6 +15,14 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/',
         component: Home
+      },
+      {
+        path: '/category/:id',
+        component: TopCategory
+      },
+      {
+        path: '/category/sub/:id',
+        component: SubCategory
       }
     ]
   }
