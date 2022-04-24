@@ -221,11 +221,11 @@
 }
 .wx {
   opacity: 0;
-  transition: all .4s .1s;
+  transition: all .6s .1s;
   overflow: hidden;
   position: absolute;
   top: 70%;
-  left: 100%;
+  left: 120%;
   z-index: 99999;
 }
 </style>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElAffix } from 'element-plus'
+import { ElAffix, ElBacktop, ElIcon } from 'element-plus'
+import { ArrowUpBold  } from '@element-plus/icons-vue'
 
 import { useStore } from '@/store'
 
 import Navbar from '@/components/NavBar/index.vue'
 import Header from '@/components/Header/index.vue'
 import Footer from '@/components/Footer/index.vue'
-import HeaderSticky from '@/components/HeaderSticky/index.vue'
 
 /**
  * 状态
@@ -35,7 +35,6 @@ const handleScroll = ({ fixed }: {
   <!-- 头部 -->
   <ElAffix :offset="0" @scroll="handleScroll">
     <Header :isFixed="isFixed" />  
-    <!-- <HeaderSticky  /> -->
   </ElAffix>
   
 
@@ -46,10 +45,29 @@ const handleScroll = ({ fixed }: {
 
   <!-- 底部 -->
   <Footer />
+
+  <ElBacktop style="width: 50px; height: 50px;" :right="90" :bottom="250">
+    <div class="top">
+      <el-icon><ArrowUpBold /></el-icon>
+    </div>
+  </ElBacktop>
 </template>
 
 <style lang="less" scoped>
 .main {
-  height: 400px;
+  height: 1400px;
+}
+.top {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--el-bg-color-overlay);
+  box-shadow: var(--el-box-shadow-lighter);
+}
+.el-icon {
+  color: @themeColor;
+  font-size: 26px;
 }
 </style>

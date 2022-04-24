@@ -8,5 +8,5 @@ export const topCategory: string[] = [
   '严选',
   '数码',
   '运动',
-  '杂货'
+  '杂项'
 ]
