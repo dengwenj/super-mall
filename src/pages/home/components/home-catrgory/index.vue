@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { ElSkeleton, ElSkeletonItem } from 'element-plus'
 
 import { useStore } from '@/store'
 import { getBrand } from '@/services/api/home'
@@ -59,6 +60,17 @@ const handleMousemove = (id: string) => {
         @mousemove="handleMousemove(item.id || '')"
       >
         <router-link :to="`/category/${item.id}`">{{ item.name }}</router-link>
+        <!-- 骨架效果 -->
+        <ElSkeleton
+          v-if="!item.children"
+          class="ElSkeleton"
+          animated
+        >
+          <template #template>
+            <el-skeleton-item variant="text" class="el-skeleton-item"/>
+            <el-skeleton-item variant="text" class="el-skeleton-item" />
+          </template>
+        </ElSkeleton>
         <template v-if="item.children">
           <router-link 
             v-for="sub in item.children" 
@@ -220,6 +232,16 @@ const handleMousemove = (id: string) => {
     .layer {
       display: block;
     }
+  }
+}
+.ElSkeleton {
+  width: 150px; 
+  display: inline-block;
+  
+  .el-skeleton-item {
+    width: 45%;
+    margin-right: 5px;
+    --el-skeleton-color:#999;
   }
 }
 </style>
