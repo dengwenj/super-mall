@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const isShowWx = ref(false)
 </script>
 
 <template>
@@ -26,8 +23,7 @@ const isShowWx = ref(false)
           <dd class="download">
             <span>扫描二维码</span>
             <span>一起探讨技术</span>
-            <a href="javascript:;" @click="() => isShowWx = !isShowWx">加上开发者微信</a>
-            <img v-if="isShowWx" class="wx" src="../../assets/images/mywx.jpg" alt="">
+              <a href="javascript:;">加上开发者微信<img class="wx" src="../../assets/images/mywx.jpg" alt=""></a>
           </dd>
         </dl>
       </div>
@@ -142,7 +138,7 @@ const isShowWx = ref(false)
       span {
         display: block;
       }
-      a {
+        a {
         display: block;
         line-height: 1;
         padding: 10px 25px;
@@ -150,6 +146,12 @@ const isShowWx = ref(false)
         color: #fff;
         border-radius: 2px;
         background-color: @themeColor;
+        &:hover {
+          .wx {
+            opacity: 1;
+            left: 80%;
+          }
+        }
       }
     }
     .hotline {
@@ -218,9 +220,12 @@ const isShowWx = ref(false)
   }
 }
 .wx {
+  opacity: 0;
+  transition: all .4s .1s;
+  overflow: hidden;
   position: absolute;
   top: 70%;
-  left: 80%;
+  left: 100%;
   z-index: 99999;
 }
 </style>
