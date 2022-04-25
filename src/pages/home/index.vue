@@ -3,6 +3,7 @@ import HomeCategory from './components/home-catrgory/index.vue'
 import HomeBanner from './components/home-banner/index.vue'
 import HomeNew from './components/home-new/index.vue'
 import HomeHot from './components/home-hot/index.vue'
+import HomeBrand from './components/home-brand/index.vue'
 </script>
 
 <template>
@@ -19,6 +20,8 @@ import HomeHot from './components/home-hot/index.vue'
       <HomeNew />
       <!-- 人气推荐 -->
       <HomeHot />
+      <!-- 热门品牌 -->
+      <HomeBrand />
     </div>
   </div>
 </template>

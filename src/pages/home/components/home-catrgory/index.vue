@@ -37,7 +37,7 @@ const menuList = computed(() => {
   return list
 })
 
-getBrand().then((res) => {
+getBrand(6).then((res) => {
   brand.brands = res.result
 })
 

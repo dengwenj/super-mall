@@ -2,10 +2,10 @@ import { ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 
 interface IApiFunc {
-  (): Promise<any>
+  (props?: any): Promise<any>
 }
 
-export default function useLazyData(apiFunc: IApiFunc) {
+export default function useLazyData<T = any>(apiFunc: IApiFunc, props?: T) {
   const goods = ref<any[]>([])
   const target = ref()
 
@@ -13,7 +13,13 @@ export default function useLazyData(apiFunc: IApiFunc) {
     // 滑到可视区在加载数据
     if (isIntersecting) {
       stop()
-      const res = await apiFunc()
+      let res
+      if (props) {
+        res = await apiFunc(props)
+        goods.value = res.result
+        return
+      }
+      res = await apiFunc()
       goods.value = res.result
     }
   })

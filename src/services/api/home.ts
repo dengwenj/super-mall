@@ -1,11 +1,11 @@
 import request from ".."
 
-export const getBrand = () => {
+export const getBrand = (limit: number) => {
   return request({
     method: 'GET',
     url: '/home/brand',
     params: {
-      limit: 6
+      limit
     }
   })
 }
@@ -30,3 +30,10 @@ export const getHot = () => {
     url: 'home/hot'
   })
 }
+
+// export const getBrands = () => {
+//   return request({
+//     method: 'GET',
+//     url: '/home/brand'
+//   })
+// }
