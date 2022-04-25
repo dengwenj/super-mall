@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import HomeCategory from './components/home-catrgory/index.vue'
 import HomeBanner from './components/home-banner/index.vue'
-import HomePanel from './components/home-panel/index.vue'
-import WwMore from '@/components/lib/WwMore.vue'
+import HomeNew from './components/home-new/index.vue'
 </script>
 
 <template>
@@ -14,11 +13,9 @@ import WwMore from '@/components/lib/WwMore.vue'
         <!-- 轮播图 -->
         <HomeBanner class="banner" />
       </div>
-      <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱">
-        <template #right>
-          <WwMore path="/"/>
-        </template>
-      </HomePanel>
+
+      <!-- 新鲜好物 -->
+      <HomeNew />
     </div>
   </div>
 </template>

@@ -16,3 +16,10 @@ export const getBanner = () => {
     url: '/home/banner'
   })
 }
+
+export const getNew = () => {
+  return request({
+    method: 'GET',
+    url: 'home/new'
+  })
+}
