@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeCategory from './components/home-catrgory/index.vue'
+import HomeBanner from './components/home-banner/index.vue'
 </script>
 
 <template>
@@ -8,7 +9,19 @@ import HomeCategory from './components/home-catrgory/index.vue'
       <div class="container">
         <!-- 左侧分类 -->
         <HomeCategory />
+        <!-- 轮播图 -->
+        <HomeBanner class="banner" />
       </div>
+
     </div>
   </div>
 </template>
+
+<style scoped lang="less">
+  .container {
+    display: flex;
+    .banner {
+      flex: 1;
+    }
+  }
+</style>

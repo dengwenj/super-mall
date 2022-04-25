@@ -9,3 +9,10 @@ export const getBrand = () => {
     }
   })
 }
+
+export const getBanner = () => {
+  return request({
+    method: 'GET',
+    url: '/home/banner'
+  })
+}
