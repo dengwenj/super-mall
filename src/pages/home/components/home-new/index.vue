@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 import { getNew } from '@/services/api/home'
 import { useLazyData } from '@/hooks'
 
@@ -8,10 +6,8 @@ import HomePanel from '../home-panel/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
 import HomeSkeleton from '../home-skeleton/index.vue'
 
-const homeNewRef = ref()
-
 // 滑到可视区在加载数据
-const goodsList = useLazyData(homeNewRef, getNew)
+const [homeNewRef, goodsList] = useLazyData(getNew)
 </script>
 
 <template>

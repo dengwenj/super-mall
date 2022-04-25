@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue"
-
 import { getHot } from '@/services/api/home'
 import { useLazyData } from '@/hooks'
 
@@ -8,9 +6,7 @@ import HomePanel from '../home-panel/index.vue'
 import WwMore from "@/components/lib/WwMore.vue"
 import HomeSkeleton from '../home-skeleton/index.vue'
 
-const homeHotRef = ref()
-
-const goodsList = useLazyData(homeHotRef, getHot)
+const [homeHotRef, goodsList] = useLazyData(getHot)
 </script>
 
 <template>

@@ -5,8 +5,9 @@ interface IApiFunc {
   (): Promise<any>
 }
 
-export default function useLazyData(target: any, apiFunc: IApiFunc) {
+export default function useLazyData(apiFunc: IApiFunc) {
   const goods = ref<any[]>([])
+  const target = ref()
 
   const { stop } = useIntersectionObserver(target, async ([{ isIntersecting }], observerElement) => {
     // 滑到可视区在加载数据
@@ -17,5 +18,5 @@ export default function useLazyData(target: any, apiFunc: IApiFunc) {
     }
   })
 
-  return goods
+  return [target, goods]
 }
