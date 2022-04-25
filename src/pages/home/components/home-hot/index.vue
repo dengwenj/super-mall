@@ -5,6 +5,7 @@ import { getHot } from '@/services/api/home'
 
 import HomePanel from '../home-panel/index.vue'
 import WwMore from "@/components/lib/WwMore.vue"
+import HomeSkeleton from '../home-skeleton/index.vue'
 
 const goodsList = ref<any[]>([])
 
@@ -22,7 +23,8 @@ onMounted(async () => {
       </template>
 
       <!-- 内容 -->
-      <ul ref="pannel" class="goods-list">
+      <HomeSkeleton v-if="!goodsList.length" />
+      <ul v-else ref="pannel" class="goods-list">
         <li v-for="item in goodsList" :key="item.id">
           <router-link to="/">
             <img :src="item.picture" alt="">
