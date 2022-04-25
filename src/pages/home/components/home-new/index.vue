@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 import { getNew } from '@/services/api/home'
+import { useLazyData } from '@/hooks'
 
 import HomePanel from '../home-panel/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
 import HomeSkeleton from '../home-skeleton/index.vue'
 
-const goodsList = ref<any[]>([])
+const homeNewRef = ref()
 
-onMounted(async () => {
-  const res = await getNew()
-  goodsList.value = res.result
-})
+// 滑到可视区在加载数据
+const goodsList = useLazyData(homeNewRef, getNew)
 </script>
 
 <template>
-  <div class="home-new">
+  <div ref="homeNewRef" class="home-new">
     <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱">
       <template #right>
         <WwMore path="/"/>

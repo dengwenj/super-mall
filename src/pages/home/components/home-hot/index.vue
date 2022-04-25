@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
 
 import { getHot } from '@/services/api/home'
+import { useLazyData } from '@/hooks'
 
 import HomePanel from '../home-panel/index.vue'
 import WwMore from "@/components/lib/WwMore.vue"
 import HomeSkeleton from '../home-skeleton/index.vue'
 
-const goodsList = ref<any[]>([])
+const homeHotRef = ref()
 
-onMounted(async () => {
-  const res = await getHot()
-  goodsList.value = res.result
-})
+const goodsList = useLazyData(homeHotRef, getHot)
 </script>
 
 <template>
-  <div>
+  <div ref="homeHotRef">
     <HomePanel title="人气推荐" sub-title="人气爆款 不容错过">
       <template #right>
         <WwMore path="/" />
