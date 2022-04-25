@@ -23,3 +23,10 @@ export const getNew = () => {
     url: 'home/new'
   })
 }
+
+export const getHot = () => {
+  return request({
+    method: 'GET',
+    url: 'home/hot'
+  })
+}

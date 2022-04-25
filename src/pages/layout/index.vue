@@ -54,9 +54,6 @@ const handleScroll = ({ fixed }: {
 </template>
 
 <style lang="less" scoped>
-.main {
-  height: 1400px;
-}
 .top {
   height: 100%;
   width: 100%;
