@@ -7,14 +7,16 @@ import { useStore } from '@/store'
  * 状态
  */
 const open = ref(true)
+const id = ref('')
 const store = useStore()
 const categoryList = computed(() => store.state.category.list)
 
 /**
  * 处理函数
  */
-const handleOpen = () => {
+const handleOpen = (prop: string) => {
   open.value = false
+  id.value = prop
 }
 const handleMouseleave = () => {
   open.value = true
@@ -25,8 +27,9 @@ const handleMouseleave = () => {
   <ul class="app-header-nav">
     <li class="home"><router-link to="/">首页</router-link></li>
     <li v-for="item in categoryList" :key="item.id">
-      <router-link 
-        @click="handleOpen" 
+      <router-link
+        :class="item.id === id ? 'isactive' : ''"
+        @click="handleOpen(item.id || '')" 
         :to="`/category/${item.id}`"
         @mouseleave="handleMouseleave"
       >
@@ -67,6 +70,10 @@ const handleMouseleave = () => {
       line-height: 32px;
       height: 32px;
       display: inline-block;
+    }
+    > .isactive {
+      color: @themeColor;
+      border-bottom: 1px solid @themeColor;
     }
     &:hover {  
       > a {
