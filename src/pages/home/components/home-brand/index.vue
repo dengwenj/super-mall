@@ -6,6 +6,7 @@ import { getBrand } from '@/services/api/home'
  
 import HomePanel from '../home-panel/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
+import HomeSkeleton from '../home-skeleton/index.vue'
 
 const isAutoplay = ref(true)
 const brand = ref<any[]>([])
@@ -31,11 +32,13 @@ const handleChange = () => {
       <template #right>
         <WwMore />
       </template>
-      <ElCarousel 
+      <HomeSkeleton v-if="!brand.length" :width="240" :height="300" :item="5"/>
+      <ElCarousel
+        v-else
         class="list" 
         indicator-position="none" 
         :interval="300"
-        :autoplay="isAutoplay" 
+        :autoplay="isAutoplay"
         @change="handleChange"
       >
         <el-carousel-item style="display: block;" v-for="item in brand" :key="item.id">
