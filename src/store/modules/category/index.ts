@@ -13,12 +13,17 @@ const category: Module<ICategoryState, IRootState> = {
   state() {
     return {
       // 全部分类
-      list: topCategory.map((item) => ({ name: item }))
+      list: topCategory.map((item) => ({ name: item })),
+      listNameSubNameAndId: {}
     }
   },
   mutations: {
     setList(state, payload) {
       state.list = payload
+    },
+    setListNameSubNameAndId(state, payload) {
+      console.log('11111')
+      state.listNameSubNameAndId = payload
     }
   },
   actions: {

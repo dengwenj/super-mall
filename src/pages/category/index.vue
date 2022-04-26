@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from '@/store'
 
 import { getCategory } from '@/services/api/category'
 
@@ -10,6 +11,7 @@ import GoodsItem from './components/goods-item/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
 
 const route = useRoute()
+const store = useStore()
 const list = ref<{
   children?: any[]
   id?: string
@@ -17,11 +19,20 @@ const list = ref<{
   picture?: any
 }>({})
 watchEffect(async () => {
-  if (route.params.id) {
+  if (route.params.id && !route.fullPath.includes('/category/sub')) {
     const res = await getCategory(route.params.id as string)
     list.value = res.result
+    console.log(list.value)
   }
 })
+
+/**
+ * 处理函数
+ */
+const handleClick = <T>(listName: T, listId: T, subId: T, subName: T) => {
+  console.log(listName, listId, subId, subName)
+  store.commit('category/setListNameSubNameAndId', { listName, listId, subId, subName })
+}
 </script>
 
 <template>
@@ -36,10 +47,10 @@ watchEffect(async () => {
         <h3>全部分类</h3>
         <ul v-if="Object.keys(list).indexOf('id') !== -1">
           <li v-for="item in list.children" :key="item.id">
-            <a href="javascript:;">
+            <router-link :to="`/category/sub/${item.id}`" @click="handleClick<string>(list.name!, list.id!, item.id, item.name)">
               <img :src="item.picture" >
               <p>{{ item.name }}</p>
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
