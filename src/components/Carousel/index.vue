@@ -17,12 +17,11 @@ onMounted(async () => {
 </script>
 
 <template>
-    <el-carousel ref="elCarouselRef" height="100%" trigger="click" :interval="5000">
-      <el-carousel-item style="display: block;" v-for="item in banner.banners" :key="item.id">
-        <img class="img" :src="item.imgUrl" alt="">
-      </el-carousel-item>
-    </el-carousel>
-  
+  <el-carousel ref="elCarouselRef" height="100%" trigger="click" :interval="5000">
+    <el-carousel-item style="display: block;" v-for="item in banner.banners" :key="item.id">
+      <img class="img" :src="item.imgUrl" alt="">
+    </el-carousel-item>
+  </el-carousel>
 </template>
 
 <style scoped lang="less">
@@ -30,6 +29,7 @@ onMounted(async () => {
   .img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 }
 </style>

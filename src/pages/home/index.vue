@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import HomeCategory from './components/home-catrgory/index.vue'
-import HomeBanner from './components/home-banner/index.vue'
 import HomeNew from './components/home-new/index.vue'
 import HomeHot from './components/home-hot/index.vue'
 import HomeBrand from './components/home-brand/index.vue'
 import HomeProduct from './components/home-product/index.vue'
 import HomeSpecial from './components/home-special/index.vue'
+import Carousel from '@/components/Carousel/index.vue'
 </script>
 
 <template>
@@ -15,7 +15,7 @@ import HomeSpecial from './components/home-special/index.vue'
         <!-- 左侧分类 -->
         <HomeCategory />
         <!-- 轮播图 -->
-        <HomeBanner class="banner" />
+        <Carousel class="banner" />
       </div>
 
       <!-- 新鲜好物 -->

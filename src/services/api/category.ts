@@ -7,3 +7,13 @@ export const getAllCategory = () => {
     url: '/home/category/head'
   })
 }
+
+export const getCategory = (id: string) => {
+  return request({
+    method: 'GET',
+    url: '/category',
+    params: {
+      id
+    }
+  })
+}

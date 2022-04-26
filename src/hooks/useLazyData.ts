@@ -19,7 +19,11 @@ export default function useLazyData<S = any, T = any>(apiFunc: IApiFunc, props?:
         goods.value = res.result
         return
       }
+      console.log(1111);
+      
       res = await apiFunc()
+      console.log('ddddd');
+      
       goods.value = res.result
     }
   }, { threshold: 0 })
