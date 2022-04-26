@@ -37,3 +37,10 @@ export const getGoods = () => {
     url: 'home/goods'
   })
 }
+
+export const getSpecial = () => {
+  return request({
+    method: 'GET',
+    url: '/home/special'
+  })
+}

@@ -1,11 +1,11 @@
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 
 interface IApiFunc {
   (props?: any): Promise<any>
 }
 
-export default function useLazyData<T = any>(apiFunc: IApiFunc, props?: T) {
+export default function useLazyData<S = any, T = any>(apiFunc: IApiFunc, props?: T): [Ref, Ref<S[]>] {
   const goods = ref<any[]>([])
   const target = ref()
 
