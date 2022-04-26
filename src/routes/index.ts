@@ -30,7 +30,13 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
   routes,
-  history: createWebHistory()
+  history: createWebHistory(),
+  scrollBehavior() {
+    return {
+      left: 0,
+      top: 0
+    }
+  }
 })
 
 export default router
