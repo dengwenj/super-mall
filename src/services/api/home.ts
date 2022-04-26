@@ -31,9 +31,9 @@ export const getHot = () => {
   })
 }
 
-// export const getBrands = () => {
-//   return request({
-//     method: 'GET',
-//     url: '/home/brand'
-//   })
-// }
+export const getGoods = () => {
+  return request({
+    method: 'GET',
+    url: 'home/goods'
+  })
+}

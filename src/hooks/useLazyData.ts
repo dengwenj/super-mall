@@ -22,7 +22,7 @@ export default function useLazyData<T = any>(apiFunc: IApiFunc, props?: T) {
       res = await apiFunc()
       goods.value = res.result
     }
-  })
+  }, { threshold: 0 })
 
   return [target, goods]
 }

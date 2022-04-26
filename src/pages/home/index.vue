@@ -4,6 +4,7 @@ import HomeBanner from './components/home-banner/index.vue'
 import HomeNew from './components/home-new/index.vue'
 import HomeHot from './components/home-hot/index.vue'
 import HomeBrand from './components/home-brand/index.vue'
+import HomeProduct from './components/home-product/index.vue'
 </script>
 
 <template>
@@ -22,6 +23,8 @@ import HomeBrand from './components/home-brand/index.vue'
       <HomeHot />
       <!-- 热门品牌 -->
       <HomeBrand />
+      <!-- 产品模块 -->
+      <HomeProduct />
     </div>
   </div>
 </template>
