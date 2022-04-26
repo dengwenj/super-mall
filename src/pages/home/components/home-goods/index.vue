@@ -17,7 +17,7 @@ defineProps<{
 <template>
   <div class="goods-item">
     <router-link :to="`/product${goodsItem.id}`" class="image">
-      <img :src="goodsItem.picture" alt="" />
+      <img v-lazy="goodsItem.picture" alt="" />
     </router-link>
     <p class="name ellipsis-2">{{ goodsItem.name }}</p>
     <p class="desc">{{ goodsItem.desc }}</p>

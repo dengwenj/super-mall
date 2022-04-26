@@ -56,6 +56,7 @@ const [homeSpecialRef, special] = useLazyData<ISpecial>(getSpecial)
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
       .meta {
         background-image: linear-gradient(to top,rgba(0, 0, 0, 0.8),transparent 50%);

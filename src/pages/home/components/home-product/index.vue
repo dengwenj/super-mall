@@ -20,7 +20,7 @@ const [homeProductRef, product] = useLazyData(getGoods)
       </template>
       <div class="box">
         <router-link class="cover" :to="`/category/${item.id}`">
-          <img :src="item.picture" alt="">
+          <img v-lazy="item.picture" alt="">
           <strong class="label">
             <span>{{ item.name }}馆</span>
             <span>{{ item.saleInfo }}</span>
