@@ -2,12 +2,10 @@
 import { computed, onMounted, ref } from 'vue'
 
 import { useStore } from '@/store'
-import { categorySubFilterById } from '@/services/api/category'
 
 import SubFilter from './sub-filter.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 
-const categorySubFilter = ref({})
 const store = useStore()
 
 const listNameSubNameAndId = computed(() => store.state.category.listNameSubNameAndId)
@@ -28,8 +26,7 @@ const breadcrumb = [
 
 onMounted(async () => {
   if (listNameSubNameAndId.value.subId) {
-    const res = await categorySubFilterById(listNameSubNameAndId.value.subId)
-    categorySubFilter.value = res.result
+    store.dispatch('category/categorySubFilterBuId', listNameSubNameAndId.value.subId)
   }
 })
 </script>
@@ -40,7 +37,7 @@ onMounted(async () => {
       <!-- 面包屑 -->
       <Breadcrumb :breadcrumb="breadcrumb" />
       <!-- 筛选区 -->
-      <SubFilter :categorySubFilter="categorySubFilter" />
+      <SubFilter />
       </div>
   </div>
 </template>

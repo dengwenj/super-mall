@@ -13,5 +13,9 @@ export interface ICategoryState {
     subName?: string
     subId?: string
     listId?: string
+  },
+  categorySubFilter: {
+    brands?: any[]
+    saleProperties?: any[]
   }
 }

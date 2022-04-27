@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useStore } from '@/store'
 import { getGoods } from '@/services/api/home'
 import { useLazyData } from '@/hooks'
 
@@ -6,7 +7,15 @@ import HomePanel from '../home-panel/index.vue'
 import HomeGoods from '../home-goods/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
 
+const store = useStore()
 const [homeProductRef, product] = useLazyData(getGoods)
+
+/**
+ * 处理函数
+ */
+const handleClick = (id: string) => {
+  store.dispatch('category/categorySubFilterBuId', id)
+}
 </script>
 
 <template>
@@ -14,7 +23,13 @@ const [homeProductRef, product] = useLazyData(getGoods)
     <HomePanel :title="item.name" v-for="item in product" :key="item.id">
       <template #right>
         <div class="sub">
-          <router-link v-for="sub in item.children" :to="`/category/sub/${sub.id}`">{{ sub.name }}</router-link>
+          <router-link 
+            v-for="sub in item.children" 
+            :to="`/category/sub/${sub.id}`"
+            @click="handleClick(sub.id)"
+          >
+            {{ sub.name }}
+          </router-link>
         </div>
         <WwMore :path="`/category/${item.id}`" />
       </template>

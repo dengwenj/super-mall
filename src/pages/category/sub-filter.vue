@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { computed } from 'vue'
 
-defineProps<{
-  categorySubFilter: {
-    brands?: any[]
-    saleProperties?: any[]
-  }
-}>()
+import { useStore } from '@/store'
+
+const store = useStore()
+
+const categorySubFilter = computed(() => store.state.category.categorySubFilter)
 </script>
 
 <template>

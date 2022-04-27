@@ -14,9 +14,13 @@ const categoryList = computed(() => store.state.category.list)
 /**
  * 处理函数
  */
-const handleOpen = (prop: string) => {
+const handleOpen = async (prop: string, isSub?: boolean) => {
   open.value = false
   id.value = prop
+
+  if (isSub) {
+    store.dispatch('category/categorySubFilterBuId', prop)
+  }
 }
 const handleMouseleave = () => {
   open.value = true
@@ -40,7 +44,7 @@ const handleMouseleave = () => {
           <li v-for="item2 in item.children" :key="item2.id">
             <router-link 
               @mouseleave="handleMouseleave" 
-              @click="handleOpen" 
+              @click="handleOpen(item2.id, true)" 
               :to="`/category/sub/${item2.id}`"
             >
               <img :src="item2.picture">
