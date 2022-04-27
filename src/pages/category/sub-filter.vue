@@ -1,15 +1,41 @@
 <script setup lang="ts">
+import { defineProps } from 'vue'
 
+defineProps<{
+  categorySubFilter: {
+    brands?: any[]
+    saleProperties?: any[]
+  }
+}>()
 </script>
 
 <template>
 	<!-- 筛选区 -->
    <div class="sub-filter">
-      <div class="item" v-for="i in 4" :key="i">
+      <div class="item">
         <div class="head">品牌：</div>
         <div class="body">
-          <a href="javascript:;">全部</a>
-          <a href="javascript:;" v-for="i in 4" :key="i">小米</a>
+          <a href="javascript:;" style="color: #d56439;">全部</a>
+          <a
+            href="javascript:;" 
+            v-for="item in categorySubFilter?.brands" 
+            :key="item.id"
+          >
+            {{ item.name }}
+          </a>
+        </div>
+      </div>
+      <div class="item" v-for="item in categorySubFilter.saleProperties" :key="item.id">
+        <div class="head">{{item.name}}：</div>
+        <div class="body">
+          <a href="javascript:;" style="color: #d56439;">全部</a>
+          <a
+            href="javascript:;" 
+            v-for="item2 in item.properties" 
+            :key="item2.id"
+          >
+            {{ item2.name }}
+          </a>
         </div>
       </div>
    </div>
@@ -31,7 +57,7 @@
         a {
           margin-right: 36px;
           transition: all .3s;
-          display: inline-block;  
+          display: inline-block;
           &.active,
           &:hover {
             color: @themeColor;

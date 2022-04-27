@@ -17,3 +17,14 @@ export const getCategory = (id: string) => {
     }
   })
 }
+
+// 二级类目筛选条件
+export const categorySubFilterById = (id: string) => {
+  return request({
+    method: 'GET',
+    url: '/category/sub/filter',
+    params: {
+      id
+    }
+  })
+}
