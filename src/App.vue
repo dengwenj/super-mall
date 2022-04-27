@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const handle = () => {
-  console.log(11);
-  
-}
 </script>
 
 <template>

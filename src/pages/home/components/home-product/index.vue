@@ -14,7 +14,7 @@ const [homeProductRef, product] = useLazyData(getGoods)
     <HomePanel :title="item.name" v-for="item in product" :key="item.id">
       <template #right>
         <div class="sub">
-          <router-link v-for="sub in item.children" :to="`/category/sub${sub.id}`">{{ sub.name }}</router-link>
+          <router-link v-for="sub in item.children" :to="`/category/sub/${sub.id}`">{{ sub.name }}</router-link>
         </div>
         <WwMore :path="`/category/${item.id}`" />
       </template>

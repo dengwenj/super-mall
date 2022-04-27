@@ -22,7 +22,6 @@ watchEffect(async () => {
   if (route.params.id && !route.fullPath.includes('/category/sub')) {
     const res = await getCategory(route.params.id as string)
     list.value = res.result
-    console.log(list.value)
   }
 })
 
