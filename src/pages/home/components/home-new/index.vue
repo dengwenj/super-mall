@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { inject } from 'vue'
+
 import { getNew } from '@/services/api/home'
 import { useLazyData } from '@/hooks'
 
@@ -8,6 +10,12 @@ import HomeSkeleton from '../home-skeleton/index.vue'
 
 // 滑到可视区在加载数据
 const [homeNewRef, goodsList] = useLazyData(getNew)
+
+const handleClickProduct: any = inject('handleClickProduct')
+
+const handleClick = () => {
+  handleClickProduct()
+}
 </script>
 
 <template>
@@ -21,7 +29,7 @@ const [homeNewRef, goodsList] = useLazyData(getNew)
       <HomeSkeleton v-if="!goodsList.length" />
       <ul v-else class="goods-list">
         <li v-for="item in goodsList" :key="item.id">
-          <router-link :to="`/product/${item.id}`">
+          <router-link @click="handleClick" :to="`/product/${item.id}`">
             <img :src="item.picture" alt="">
             <p class="name ellipsis">{{item.name}}</p>
             <p class="price">&yen;{{item.price}}</p>

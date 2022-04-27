@@ -16,7 +16,7 @@ const category: Module<ICategoryState, IRootState> = {
       list: topCategory.map((item) => ({ name: item })),
       listNameSubNameAndId: {},
       categorySubFilter: {},
-      categoryId: localStorage.getItem('category') || ''
+      categoryId: localStorage.getItem('categoryId') || ''
     }
   },
   mutations: {

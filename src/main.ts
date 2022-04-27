@@ -5,6 +5,7 @@ import store from './store'
 import App from './App.vue'
 import UIComponent from '@/global/component'
 import directive from './global/directive'
+import methods from './global/methods'
 
 import 'element-plus/dist/index.css'
 import 'normalize.css'
@@ -15,4 +16,5 @@ app.use(router)
 app.use(store)
 app.use(UIComponent)
 app.use(directive)
+app.use(methods)
 app.mount('#app')

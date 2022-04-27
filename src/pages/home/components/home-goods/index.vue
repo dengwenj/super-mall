@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, inject } from 'vue'
+
+// 定义在全局
+const handleClickProduct: any = inject('handleClickProduct')
+
+const handleClick = () => {
+  handleClickProduct()
+}
 
 defineProps<{
   goodsItem: {
@@ -16,7 +23,7 @@ defineProps<{
 
 <template>
   <div class="goods-item">
-    <router-link :to="`/product/${goodsItem.id}`" class="image">
+    <router-link @click="handleClick" :to="`/product/${goodsItem.id}`" class="image">
       <img v-lazy="goodsItem.picture" alt="" />
     </router-link>
     <p class="name ellipsis-2">{{ goodsItem.name }}</p>

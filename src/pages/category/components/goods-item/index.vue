@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, inject } from 'vue'
 
 defineProps<{
   goods: {
@@ -12,11 +12,17 @@ defineProps<{
     price: string
   }
 }>()
+
+const handleClickProduct: any = inject('handleClickProduct')
+
+const handleClick = () => {
+  handleClickProduct()
+}
 </script>
 
 <template>
-  <router-link :to="`/product/${goods.id}`" class='goods-item'>
-    <img :src="goods.picture" alt="">
+  <router-link @click="handleClick" :to="`/product/${goods.id}`" class='goods-item'>
+    <img v-lazy="goods.picture" alt="">
     <p class="name ellipsis">{{ goods.name }}</p>
     <p class="desc ellipsis">{{ goods.desc }}</p>
     <p class="price">&yen;{{ goods.price }}</p>
