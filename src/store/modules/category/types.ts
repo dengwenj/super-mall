@@ -7,6 +7,7 @@ interface IAllCategory {
 }
 
 export interface ICategoryState {
+  categoryId: string
   list: IAllCategory[],
   listNameSubNameAndId: {
     listName?: string

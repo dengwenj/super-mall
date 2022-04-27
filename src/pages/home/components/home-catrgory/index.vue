@@ -6,6 +6,7 @@ import { useStore } from '@/store'
 import { getBrand } from '@/services/api/home'
 
 import type { IMenuList } from './types'
+import { IListNameSubNameAndId } from '@/components/HeaderNav/types'
 
 /**
  * 状态
@@ -49,6 +50,20 @@ const handleMousemove = (id: string) => {
   categoryId.value = id
   goods.value = categoryItem?.goods || [] 
 }
+
+function setCategoryId(id: string) {
+  localStorage.setItem('categoryId', id)
+  store.commit('category/setCategoryId', localStorage.getItem('categoryId')!)
+}
+
+const handleClick = (id: string, listNameSubNameAndId: IListNameSubNameAndId) => {
+  setCategoryId(listNameSubNameAndId.listId)
+
+  store.dispatch('category/categorySubFilterBuId', id)
+  store.commit('category/setListNameSubNameAndId', listNameSubNameAndId)
+}
+
+const handleActive = (id: string) => setCategoryId(id)
 </script>
 
 <template>
@@ -59,7 +74,7 @@ const handleMousemove = (id: string) => {
         v-for="item in menuList" :key="item.id" 
         @mousemove="handleMousemove(item.id || '')"
       >
-        <router-link :to="`/category/${item.id}`">{{ item.name }}</router-link>
+        <router-link @click="handleActive(item.id!)" :to="`/category/${item.id}`">{{ item.name }}</router-link>
         <!-- 骨架效果 -->
         <ElSkeleton
           v-if="!item.children"
@@ -76,6 +91,12 @@ const handleMousemove = (id: string) => {
             v-for="sub in item.children" 
             :to="`/category/sub/${sub.id}`"
             :key="sub.id"
+            @click="handleClick(sub.id, {
+              listName: item.name,
+              listId: item.id!,
+              subName: sub.name,
+              subId: sub.id
+            })"
           >
             {{ sub.name }}
           </router-link>

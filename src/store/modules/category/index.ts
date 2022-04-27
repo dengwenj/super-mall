@@ -15,7 +15,8 @@ const category: Module<ICategoryState, IRootState> = {
       // 全部分类
       list: topCategory.map((item) => ({ name: item })),
       listNameSubNameAndId: {},
-      categorySubFilter: {}
+      categorySubFilter: {},
+      categoryId: localStorage.getItem('category') || ''
     }
   },
   mutations: {
@@ -27,6 +28,9 @@ const category: Module<ICategoryState, IRootState> = {
     },
     setCategorySubFilter(state, payload) {
       state.categorySubFilter = payload
+    },
+    setCategoryId(state, payload) {
+      state.categoryId = payload
     }
   },
   actions: {

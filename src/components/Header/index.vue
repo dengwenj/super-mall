@@ -2,22 +2,31 @@
 import { defineProps } from 'vue'
 
 import HeaderNav from '@/components/HeaderNav/index.vue'
+import { useStore } from '@/store'
+
+const store = useStore()
 
 defineProps<{
   isFixed?: boolean
 }>()
+
+const handleClick = () => {
+  localStorage.setItem('categoryId', '')
+  store.commit('category/setCategoryId', '')
+}
+
 </script>
 
 <template>
   <header class='app-header'>
     <div class="container">
       <h1 class="logo">
-        <router-link to="/" :style="!isFixed ? '' : { height: '80px' }">
+        <router-link @click="handleClick" to="/" :style="!isFixed ? '' : { height: '80px' }">
           <img class="img" src="../../assets/images/dwjww.png" alt="购物商城">
           <div class="name" :style="!isFixed ? '' : { top: '35%' }">购物商城</div>
         </router-link>
       </h1>
-      <HeaderNav />
+      <HeaderNav  />
       <div class="isFixd" v-if="!isFixed">
         <div class="search">
           <i class="iconfont icon-search"></i>
