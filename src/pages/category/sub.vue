@@ -60,12 +60,15 @@ onMounted(() => {
         isUnobserve.value = true
         isEmpty.value = true
       } else {
-        isLoading.value = true
+        // 这样刷新就只会加载一次，因为刷新的时候那个第一次位置看的见，所以进入了
+        if (params.page !== 1) {
+          isLoading.value = true
 
-        const res = await getSubCategoryGoods(params)
-        product.value.items.push(...res.result.items)
-        isLoading.value = false
-        params.page++
+          const res = await getSubCategoryGoods(params)
+          product.value.items.push(...res.result.items)
+          isLoading.value = false
+          params.page++ 
+        }
       }
 
       // 当全部都加载完了，就停止观察

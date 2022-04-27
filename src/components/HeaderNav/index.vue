@@ -8,9 +8,9 @@ import type { IListNameSubNameAndId } from './types'
 /**
  * 状态
  */
-const open = ref(true)
-const id = ref('')
 const store = useStore()
+const open = ref(true)
+const id = ref(localStorage.getItem('categoryId'))
 const categoryList = computed(() => store.state.category.list)
 
 /**
@@ -20,7 +20,15 @@ const handleOpen = async (prop: string, isSub?: boolean, listNameSubNameAndId?: 
   open.value = false
   id.value = prop
 
+  if (localStorage.getItem('categoryId') !== prop) {
+    if (!isSub) {
+      localStorage.setItem('categoryId', prop)
+    }
+  }
+  
   if (isSub) {
+    localStorage.setItem('categoryId', listNameSubNameAndId!.listId)
+
     store.dispatch('category/categorySubFilterBuId', prop)
     store.commit('category/setListNameSubNameAndId', listNameSubNameAndId)
   }
@@ -29,13 +37,14 @@ const handleMouseleave = () => {
   open.value = true
 }
 const handleHome = () => {
+  localStorage.setItem('categoryId', '')
   id.value = ''
 }
 </script>
 
 <template>
   <ul class="app-header-nav">
-    <li class="home"><router-link to="/" :class="id === '' ? 'isactive' : ''" @click="handleHome">首页</router-link></li>
+    <li class="home"><router-link to="/" :class="id ? '' : 'isactive'" @click="handleHome">首页</router-link></li>
     <li v-for="item in categoryList" :key="item.id">
       <router-link
         :class="item.id === id ? 'isactive' : ''"
