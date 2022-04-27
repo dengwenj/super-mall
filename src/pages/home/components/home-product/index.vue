@@ -19,6 +19,11 @@ const handleClick = (id: string, listNameSubNameAndId: IListNameSubNameAndId) =>
   store.dispatch('category/categorySubFilterBuId', id)
   store.commit('category/setListNameSubNameAndId', listNameSubNameAndId)
 }
+
+const handleCategory = (id: string) => {
+  localStorage.setItem('categoryId', id)
+  store.commit('category/setCategoryId', localStorage.getItem('categoryId')!)
+}
 </script>
 
 <template>
@@ -34,7 +39,7 @@ const handleClick = (id: string, listNameSubNameAndId: IListNameSubNameAndId) =>
             {{ sub.name }}
           </router-link>
         </div>
-        <WwMore :path="`/category/${item.id}`" />
+        <WwMore @click="handleCategory(item.id)" :path="`/category/${item.id}`" />
       </template>
       <div class="box">
         <router-link class="cover" :to="`/category/${item.id}`">
