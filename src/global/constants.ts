@@ -10,3 +10,12 @@ export const topCategory: string[] = [
   '运动',
   '杂项'
 ]
+
+// 二级分类排序
+export const sort = [
+  '默认排序',
+  '最新商品',
+  '最高人气',
+  '评论最多',
+  '价格排序'
+]

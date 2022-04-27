@@ -29,7 +29,6 @@ watchEffect(async () => {
  * 处理函数
  */
 const handleClick = <T>(listName: T, listId: T, subId: T, subName: T) => {
-  console.log(listName, listId, subId, subName)
   store.commit('category/setListNameSubNameAndId', { listName, listId, subId, subName })
 }
 </script>

@@ -28,3 +28,11 @@ export const categorySubFilterById = (id: string) => {
     }
   })
 }
+
+export const getSubCategoryGoods = (data: Record<string, any>) => {
+  return request({
+    method: 'post',
+    url: '/category/goods/temporary',
+    data
+  })
+}
