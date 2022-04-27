@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { ElEmpty } from 'element-plus'
 
 import { useStore } from '@/store'
@@ -10,6 +10,9 @@ import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import SubSort from './components/sub-sort/index.vue'
 import GoodsItem from './components/goods-item/index.vue'
 
+/**
+ * 状态
+ */
 const product = ref<Record<string, any>>({})
 const footerRef = ref<Element | null>(null)
 const isEmpty = ref(false)
@@ -23,7 +26,7 @@ const store = useStore()
 
 const listNameSubNameAndId = computed(() => store.state.category.listNameSubNameAndId)
 
-const breadcrumb = [
+const breadcrumb = computed(() => [
   {
     name: '首页',
     path: '/'
@@ -35,9 +38,9 @@ const breadcrumb = [
   {
     name: listNameSubNameAndId.value.subName!,
   }
-]
+])
 
-onMounted(async () => {
+watchEffect(() => {
   if (listNameSubNameAndId.value.subId) {
     store.dispatch('category/categorySubFilterBuId', listNameSubNameAndId.value.subId)
   }

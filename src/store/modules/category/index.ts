@@ -31,8 +31,11 @@ const category: Module<ICategoryState, IRootState> = {
   },
   actions: {
     async getList({ commit }) {
-      const data = await getAllCategory()
-      commit('setList', data.result)
+      return new Promise(async (resolve, reject) => {
+        const data = await getAllCategory()
+        commit('setList', data.result)
+        resolve(data.result)
+      })
     },
     async categorySubFilterBuId({ commit }, id: string) {
       const data = await categorySubFilterById(id)

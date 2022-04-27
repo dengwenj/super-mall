@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { ElAffix, ElBacktop, ElIcon } from 'element-plus'
 import { ArrowUpBold  } from '@element-plus/icons-vue'
 
@@ -14,8 +15,24 @@ import Footer from '@/components/Footer/index.vue'
  */
 const isFixed = ref(false)
 const store = useStore()
+const route = useRoute()
 // 获取全部分类
-store.dispatch('category/getList')
+const promiseList = store.dispatch('category/getList')
+
+promiseList.then((res) => {
+  if (route.fullPath.includes('/category/sub')) {
+    const categoryId = localStorage.getItem('categoryId')
+    const categoryItem = res.find((item: any) => item.id === categoryId)
+    const subItem = categoryItem.children.find((item: any) => item.id === route.params.id)
+    
+    store.commit('category/setListNameSubNameAndId', {
+      listId: categoryItem.id,
+      listName: categoryItem.name,
+      subName: subItem.name,
+      subId: subItem.id
+    })
+  }
+})
 
 /**
  * 处理函数

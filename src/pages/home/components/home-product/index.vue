@@ -7,14 +7,17 @@ import HomePanel from '../home-panel/index.vue'
 import HomeGoods from '../home-goods/index.vue'
 import WwMore from '@/components/lib/WwMore.vue'
 
+import type { IListNameSubNameAndId } from '@/components/HeaderNav/types'
+
 const store = useStore()
 const [homeProductRef, product] = useLazyData(getGoods)
 
 /**
  * 处理函数
  */
-const handleClick = (id: string) => {
+const handleClick = (id: string, listNameSubNameAndId: IListNameSubNameAndId) => {
   store.dispatch('category/categorySubFilterBuId', id)
+  store.commit('category/setListNameSubNameAndId', listNameSubNameAndId)
 }
 </script>
 
@@ -26,7 +29,7 @@ const handleClick = (id: string) => {
           <router-link 
             v-for="sub in item.children" 
             :to="`/category/sub/${sub.id}`"
-            @click="handleClick(sub.id)"
+            @click="handleClick(sub.id, { listId: item.id, listName: item.name, subId: sub.id, subName: sub.name })"
           >
             {{ sub.name }}
           </router-link>

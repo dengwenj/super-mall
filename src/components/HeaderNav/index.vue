@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 
 import { useStore } from '@/store'
 
+import type { IListNameSubNameAndId } from './types'
+
 /**
  * 状态
  */
@@ -14,22 +16,26 @@ const categoryList = computed(() => store.state.category.list)
 /**
  * 处理函数
  */
-const handleOpen = async (prop: string, isSub?: boolean) => {
+const handleOpen = async (prop: string, isSub?: boolean, listNameSubNameAndId?: IListNameSubNameAndId) => {
   open.value = false
   id.value = prop
 
   if (isSub) {
     store.dispatch('category/categorySubFilterBuId', prop)
+    store.commit('category/setListNameSubNameAndId', listNameSubNameAndId)
   }
 }
 const handleMouseleave = () => {
   open.value = true
 }
+const handleHome = () => {
+  id.value = ''
+}
 </script>
 
 <template>
   <ul class="app-header-nav">
-    <li class="home"><router-link to="/">首页</router-link></li>
+    <li class="home"><router-link to="/" :class="id === '' ? 'isactive' : ''" @click="handleHome">首页</router-link></li>
     <li v-for="item in categoryList" :key="item.id">
       <router-link
         :class="item.id === id ? 'isactive' : ''"
@@ -44,7 +50,7 @@ const handleMouseleave = () => {
           <li v-for="item2 in item.children" :key="item2.id">
             <router-link 
               @mouseleave="handleMouseleave" 
-              @click="handleOpen(item2.id, true)" 
+              @click="handleOpen(item2.id, true, { listId: item.id!, listName: item.name, subId: item2.id, subName: item2.name })" 
               :to="`/category/sub/${item2.id}`"
             >
               <img :src="item2.picture">

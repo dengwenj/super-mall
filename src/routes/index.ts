@@ -39,4 +39,10 @@ const router = createRouter({
   }
 })
 
+router.beforeEach((to, from) => {
+  if (from.fullPath.includes('/category') && !from.fullPath.includes('/category/sub')) {
+    localStorage.setItem('categoryId', from.params.id as string)
+  }
+})
+
 export default router

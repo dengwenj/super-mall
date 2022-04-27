@@ -18,7 +18,7 @@ const store = createStore<IRootState>({
   plugins: [
     createPersistedState({
       key: 'super-mall',
-      paths: ['user', 'cart', 'category']
+      paths: ['user', 'cart']
     })
   ]
 })
