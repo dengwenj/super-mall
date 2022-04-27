@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, inject } from 'vue'
 import { ElSkeleton, ElSkeletonItem } from 'element-plus'
 
 import { useStore } from '@/store'
@@ -37,6 +37,7 @@ const menuList = computed(() => {
   list.push(brand)
   return list
 })
+const handleClickProduct: any = inject('handleClickProduct')
 
 getBrand(6).then((res) => {
   brand.brands = res.result
@@ -64,6 +65,10 @@ const handleClick = (id: string, listNameSubNameAndId: IListNameSubNameAndId) =>
 }
 
 const handleActive = (id: string) => setCategoryId(id)
+
+const clickProduct = () => {
+  handleClickProduct()
+}
 </script>
 
 <template>
@@ -109,7 +114,7 @@ const handleActive = (id: string) => setCategoryId(id)
       <h4>{{ categoryId === 'brand' ? '品牌' : '分类' }}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <ul v-if="goods.length">
         <li v-for="item in goods" :key="item.id">
-          <router-link :to="'/'">
+          <router-link @click="clickProduct" :to="`/product/${item.id}`">
             <img :src="item.picture" alt="">
             <div class="info">
               <p class="name ellipsis-2">{{ item.name }}</p>

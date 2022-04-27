@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import { sort } from '@/global/constants'
 
-const isActive = ref('')
+const isActive = ref('默认排序')
 
 /**
  * 处理函数
