@@ -7,6 +7,8 @@ import { getGoods } from '@/services/api/goods'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import GoodsRelevant from './components/goods-relevant/index.vue'
 import GoodsImage from './components/goods-image/index.vue'
+import GoodsSales from './components/goods-sales/index.vue'
+import GoodsName from './components/goods-name/index.vue'
 
 const goods = ref()
 const route = useRoute()
@@ -43,8 +45,11 @@ const breadcrumb = computed(() => [
       <div class="goods-info">
         <div class="media">
           <GoodsImage :images="goods.mainPictures" /> 
+          <GoodsSales />
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <GoodsName :goods="goods" />
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRelevant />
