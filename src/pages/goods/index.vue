@@ -6,6 +6,7 @@ import { getGoods } from '@/services/api/goods'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import GoodsRelevant from './components/goods-relevant/index.vue'
+import GoodsImage from './components/goods-image/index.vue'
 
 const goods = ref()
 const route = useRoute()
@@ -34,12 +35,17 @@ const breadcrumb = computed(() => [
 </script>
 
 <template>
-  <div class='xtx-goods-page'>
+  <div class='xtx-goods-page' v-if="goods">
     <div class="container">
       <!-- 面包屑 -->
       <Breadcrumb :breadcrumb="breadcrumb" />
       <!-- 商品信息 -->
-      <div class="goods-info"></div>
+      <div class="goods-info">
+        <div class="media">
+          <GoodsImage :images="goods.mainPictures" /> 
+        </div>
+        <div class="spec"></div>
+      </div>
       <!-- 商品推荐 -->
       <GoodsRelevant />
       <!-- 商品详情 -->
@@ -61,6 +67,16 @@ const breadcrumb = computed(() => [
 .goods-info {
   min-height: 600px;
   background: #fff;
+  display: flex;
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
 }
 .goods-footer {
   display: flex;
