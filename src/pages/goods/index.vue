@@ -1,13 +1,43 @@
 <script setup lang="ts">
+import { computed, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { getGoods } from '@/services/api/goods'
+
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import GoodsRelevant from './components/goods-relevant/index.vue'
+
+const goods = ref()
+const route = useRoute()
+
+watchEffect(async () => {
+  if (route.fullPath.includes('/product')) {
+    const data = await getGoods(route.params.id as string)
+    goods.value = data.result
+    console.log(data.result)
+  }
+})
+
+const breadcrumb = computed(() => [
+  {
+    name: goods.value?.categories[1].name,
+    path: goods.value?.categories[1].id
+  },
+  {
+    name: goods.value?.categories[0].name,
+    path: goods.value?.categories[0].id
+  },
+  {
+    name: goods.value?.name,
+  }
+])
 </script>
 
 <template>
   <div class='xtx-goods-page'>
     <div class="container">
       <!-- 面包屑 -->
-      <Breadcrumb />
+      <Breadcrumb :breadcrumb="breadcrumb" />
       <!-- 商品信息 -->
       <div class="goods-info"></div>
       <!-- 商品推荐 -->
