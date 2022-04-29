@@ -6,7 +6,7 @@ const Layout = () => import('@/pages/layout/index.vue')
 const Home = () => import('@/pages/home/index.vue')
 const TopCategory = () => import('@/pages/category/index.vue')
 const SubCategory = () => import('@/pages/category/sub.vue')
-const Product = () => import('@/pages/product/index.vue')
+const Product = () => import('@/pages/goods/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
