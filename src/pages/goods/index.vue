@@ -9,6 +9,7 @@ import GoodsRelevant from './components/goods-relevant/index.vue'
 import GoodsImage from './components/goods-image/index.vue'
 import GoodsSales from './components/goods-sales/index.vue'
 import GoodsName from './components/goods-name/index.vue'
+import GoodsSku from './components/goods-sku/index.vue'
 
 const goods = ref()
 const route = useRoute()
@@ -49,6 +50,7 @@ const breadcrumb = computed(() => [
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
+          <GoodsSku />
         </div>
       </div>
       <!-- 商品推荐 -->

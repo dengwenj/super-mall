@@ -76,7 +76,7 @@ watchEffect(() => {
   height: 400px;
   position: relative;
   display: flex;
-  z-index: 500;
+  z-index: 90;
   .large {
     position: absolute;
     top: 0;
