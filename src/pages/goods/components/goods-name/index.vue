@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
+import WwCity from '@/components/lib/WwCity.vue'
+
 defineProps<{
   goods: any
 }>()
@@ -20,7 +22,7 @@ defineProps<{
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至 </dd>
+      <dd>至 <WwCity /></dd>
     </dl>
     <dl>
       <dt>服务</dt>
