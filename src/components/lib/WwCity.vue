@@ -1,13 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import axios from 'axios'
 
 const isShow = ref(false)
 const cityRef = ref()
+const cityData = ref<any[]>([])
+const isLoading = ref(false)
 
 
 const handleClickCity = () => {
   isShow.value = !isShow.value
+
+  if (isShow.value) {
+    if ((window as any).cityData) {
+      cityData.value = (window as any).cityData
+    } else {
+      isLoading.value = true
+      axios.get('https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json')
+        .then((res) => {
+          (window as any).cityData = res.data
+          cityData.value = res.data
+          isLoading.value = false
+        })
+    }
+  }
 }
 
 onClickOutside(cityRef, () => {
@@ -23,7 +40,8 @@ onClickOutside(cityRef, () => {
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="isShow">
-      <span class="ellipsis" v-for="i in 24" :key="i">北京市</span>
+      <div v-if="isLoading" class="loading">加载中...</div>
+      <span v-else class="ellipsis" v-for="item in cityData" :key="item.code">{{ item.name }}</span>
     </div>
   </div>
 </template>
@@ -75,6 +93,13 @@ onClickOutside(cityRef, () => {
       &:hover {
         background: #f5f5f5;
       }
+    }
+    .loading {
+      height: 290px;
+      width: 100%;
+      font-size: 20px;
+      color: @themeColor;
+      text-align: center;
     }
   }
 }
