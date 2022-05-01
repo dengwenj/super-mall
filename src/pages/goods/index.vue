@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, onUpdated, nextTick } from 'vue'
+import { computed, ref, watchEffect, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElInputNumber } from 'element-plus'
 
@@ -12,6 +12,7 @@ import GoodsSales from './components/goods-sales/index.vue'
 import GoodsName from './components/goods-name/index.vue'
 import GoodsSku from './components/goods-sku/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
+import GoodsTabs from './components/goods-tabs/index.vue'
 
 const goods = ref()
 const route = useRoute()
@@ -54,11 +55,6 @@ const changeSku = (sku: Record<string, any>) => {
 const handleChange = (currentValue: number | undefined) => {
   // console.log(currentValue)
 }
-
-onUpdated(() => {
-  console.log('onUpdated');
-  
-})
 </script>
 
 <template>
@@ -89,7 +85,7 @@ onUpdated(() => {
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs :goods="goods" />
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
