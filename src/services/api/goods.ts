@@ -22,3 +22,11 @@ export const getGoodsRelevant = (params?: IGoodsRelevantParams) => {
     params
   })
 }
+
+export const getGoodsHot = (params: {id: string, limit: number, type: number}) => {
+  return request({
+    method: 'GET',
+    url: '/goods/hot',
+    params
+  })
+}
