@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect, onUpdated, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElInputNumber } from 'element-plus'
 
@@ -20,8 +20,12 @@ const num = ref(1)
 watchEffect(async () => {
   if (route.fullPath.includes('/product')) {
     const data = await getGoods(route.params.id as string)
-    goods.value = data.result
-    console.log(data.result)
+    // 让商品数据为null然后使用v-if的组件可以重新销毁和创建
+    goods.value = null
+
+    nextTick(() => {
+      goods.value = data.result
+    })
   }
 })
 
@@ -40,8 +44,6 @@ const breadcrumb = computed(() => [
 ])
 
 const changeSku = (sku: Record<string, any>) => {
-  console.log(sku)
-
   if (sku.skuId) {
     goods.value.price = sku.price
     goods.value.oldPrice = sku.oldPrice
@@ -52,6 +54,11 @@ const changeSku = (sku: Record<string, any>) => {
 const handleChange = (currentValue: number | undefined) => {
   // console.log(currentValue)
 }
+
+onUpdated(() => {
+  console.log('onUpdated');
+  
+})
 </script>
 
 <template>
@@ -77,7 +84,7 @@ const handleChange = (currentValue: number | undefined) => {
         </div>
       </div>
       <!-- 商品推荐 -->
-      <GoodsRelevant />
+      <GoodsRelevant :goods="goods" />
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
