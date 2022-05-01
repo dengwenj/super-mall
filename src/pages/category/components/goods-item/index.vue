@@ -10,7 +10,7 @@ defineProps<{
     orderNum: number
     picture: string
     price: string
-  } | any
+  }
 }>()
 
 const handleClickProduct: any = inject('handleClickProduct')

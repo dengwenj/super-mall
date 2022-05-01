@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, nextTick } from 'vue'
+import { computed, ref, watchEffect, nextTick, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElInputNumber } from 'element-plus'
 
@@ -24,12 +24,15 @@ watchEffect(async () => {
     const data = await getGoods(route.params.id as string)
     // 让商品数据为null然后使用v-if的组件可以重新销毁和创建
     goods.value = null
+    // 传给子
 
     nextTick(() => {
       goods.value = data.result
     })
   }
 })
+
+provide('goods', goods)
 
 const breadcrumb = computed(() => [
   {
