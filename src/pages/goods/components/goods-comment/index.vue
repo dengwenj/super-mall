@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { onMounted, ref, inject, defineEmits } from 'vue'
 import { ElPagination } from 'element-plus'
 
@@ -21,15 +21,21 @@ onMounted(async () => {
   emit('evaluateCount', evaluateComment.value.evaluateCount)
 })
 
-onMounted(async () => {
+async function requst(page: number = 1) {
   const res = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate/page`, {
     params: {
-      page: 1,
+      page,
       pageSize: 10
     }
   })
-  evaluatePageComment.value = res.data.result
-})
+  evaluatePageComment.value = (await res).data.result
+}
+
+onMounted(() => { requst() })
+
+const handleCurrentChange = (currentChange: number) => {
+  requst(currentChange)
+}
 </script>
 
 <template>
@@ -99,10 +105,12 @@ onMounted(async () => {
     </div>
     <!-- 分页 -->
     <ElPagination
+      v-if="evaluatePageComment"
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="evaluatePageComment.counts"
       class="pagination"
+      @current-change="handleCurrentChange"
     />
   </div>
 </template>
@@ -234,6 +242,13 @@ onMounted(async () => {
       }
     }
   }
-  
+  .pagination {
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  /deep/ .el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+    background-color: @themeColor;
+  }
 }
 </style>
