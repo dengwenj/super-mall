@@ -35,6 +35,16 @@ const breadcrumb = computed(() => [
     name: goods.value?.name,
   }
 ])
+
+const changeSku = (sku: Record<string, any>) => {
+  console.log(sku)
+
+  if (sku.skuId) {
+    goods.value.price = sku.price
+    goods.value.oldPrice = sku.oldPrice
+    goods.value.inventory = sku.inventory
+  }
+}
 </script>
 
 <template>
@@ -50,7 +60,7 @@ const breadcrumb = computed(() => [
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
-          <GoodsSku :goods="goods" />
+          <GoodsSku :goods="goods" sku-id="300078207" @change="changeSku" />
         </div>
       </div>
       <!-- 商品推荐 -->
