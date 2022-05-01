@@ -21,20 +21,35 @@ onMounted(async () => {
   emit('evaluateCount', evaluateComment.value.evaluateCount)
 })
 
-async function requst(page: number = 1) {
+async function requst(params: Record<string, any>) {
   const res = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate/page`, {
-    params: {
-      page,
-      pageSize: 10
-    }
+    params
   })
   evaluatePageComment.value = (await res).data.result
 }
 
-onMounted(() => { requst() })
+onMounted(() => {
+  requst({
+    page: 1,
+    pageSize: 10
+  })
+})
 
 const handleCurrentChange = (currentChange: number) => {
-  requst(currentChange)
+  requst({
+    page: currentChange,
+    pageSize: 10
+  })
+}
+
+const handleClickSort = (idx: number, sortField: string) => {
+  initNewHotBuIdx.value = idx
+
+  requst({
+    page: 1,
+    package: 10,
+    sortField
+  })
 }
 </script>
 
@@ -65,7 +80,7 @@ const handleCurrentChange = (currentChange: number) => {
         :class="initNewHotBuIdx === index ? 'active' : ''" 
         v-for="(item, index) in initNewHot" 
         :key="item"
-        @click="initNewHotBuIdx = index"
+        @click="handleClickSort(index, index === 1 ? 'createTime' : index === 2 ? 'praiseCount' : '')"
       >
         {{ item }}
       </a>
