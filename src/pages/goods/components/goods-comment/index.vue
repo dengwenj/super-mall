@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { onMounted, ref, inject, defineEmits } from 'vue'
+import { ElPagination } from 'element-plus'
 
 const goods: Record<string, any> | undefined = inject('goods')
 
-const evaluateComment = ref()
+const initNewHot = ['默认', '最新', '最热']
 const activeByIdx = ref(0)
+const initNewHotBuIdx = ref(0)
+const evaluateComment = ref<any>(null)
+const evaluatePageComment = ref<any>(null)
 
 const emit = defineEmits<{
   (e: 'evaluateCount', evaluateCount: number): void
@@ -15,6 +19,16 @@ onMounted(async () => {
   const res = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate`)
   evaluateComment.value = res.data.result
   emit('evaluateCount', evaluateComment.value.evaluateCount)
+})
+
+onMounted(async () => {
+  const res = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate/page`, {
+    params: {
+      page: 1,
+      pageSize: 10
+    }
+  })
+  evaluatePageComment.value = res.data.result
 })
 </script>
 
@@ -41,11 +55,55 @@ onMounted(async () => {
     </div>
     <div class="sort">
       <span>排序：</span>
-      <a href="javascript:;" class="active">默认</a>
-      <a href="javascript:;">最新</a>
-      <a href="javascript:;">最热</a>
+      <a 
+        :class="initNewHotBuIdx === index ? 'active' : ''" 
+        v-for="(item, index) in initNewHot" 
+        :key="item"
+        @click="initNewHotBuIdx = index"
+      >
+        {{ item }}
+      </a>
     </div>
-    <div class="list"></div>
+    <!-- 列表 -->
+    <div class="list" v-if="evaluatePageComment">
+      <div class="item" v-for="item in evaluatePageComment.items" :key="item.id">
+        <div class="user">
+          <img :src="item.member.avatar" alt="">
+          <span>{{ item.member.nickname }}</span>
+        </div>
+        <div class="body">
+          <div class="score">
+            <i
+              class="iconfont icon-wjx01" 
+              v-for="itex in item.score"
+              :key="itex"
+            />
+            <i 
+              class="iconfont icon-wjx02" 
+              v-for="itey in 5 - item?.score" 
+              :key="itey"
+            />
+            <span class="attr">
+              <span v-for="itez in item.orderInfo.specs" :key="itez.name">
+                {{itez.name}}：{{ itez.nameValue }}
+              </span>
+            </span>
+          </div>
+          <div class="text">{{ item.content }}</div>
+          <div class="time">
+            <span>{{ item.createTime }}</span>
+            <span class="zan"><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 分页 -->
+    <ElPagination
+      background
+      layout="prev, pager, next"
+      :total="50"
+      class="pagination"
+    />
   </div>
 </template>
 
@@ -125,10 +183,57 @@ onMounted(async () => {
     }
     > a {
       margin-left: 30px;
+      cursor: pointer;
       &.active,&:hover {
         color: @themeColor;
       }
     }
   }
+  .list {
+    padding: 0 20px;
+    .item {
+      display: flex;
+      padding: 25px 10px;
+      border-bottom: 1px solid #f5f5f5;
+      .user {
+        width: 160px;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+        span {
+          padding-left: 10px;
+          color: #666;
+        }
+      }
+      .body {
+        flex: 1;
+        .score {
+          line-height: 40px;
+          .iconfont {
+            color: #ff9240;
+            padding-right: 3px;
+          }
+          .attr {
+            padding-left: 10px;
+            color: #666;
+          }
+        }
+      }
+      .text {
+        color: #666;
+        line-height: 24px;
+      }
+      .time {
+        color: #999;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+      }
+    }
+  }
+  
 }
 </style>

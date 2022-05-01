@@ -5,6 +5,15 @@ interface IGoodsRelevantParams {
   limit?: number
 }
 
+interface IGoodsEvaluatePageParams {
+  page: number
+  pageSize: number
+  hasPicture?: boolean
+  tag?: string
+  sortField?: any
+  sortMethod?: any
+}
+
 export const getGoods = (id: string) => {
   return request({
     method: 'GET',
@@ -37,3 +46,11 @@ export const getGoodsHot = (params: {id: string, limit: number, type: number}) =
 //     url: `/goods/${id}/evaluate`
 //   })
 // }
+
+export const getGoodsEvaluatePage = (id: string, params: IGoodsEvaluatePageParams) => {
+  return request({
+    method: 'GET',
+    url: `/goods/${id}/evaluate/page`,
+    params
+  })
+}
