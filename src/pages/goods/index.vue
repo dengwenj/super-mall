@@ -11,6 +11,7 @@ import GoodsImage from './components/goods-image/index.vue'
 import GoodsSales from './components/goods-sales/index.vue'
 import GoodsName from './components/goods-name/index.vue'
 import GoodsSku from './components/goods-sku/index.vue'
+import WwButton from '@/components/lib/WwButton.vue'
 
 const goods = ref()
 const route = useRoute()
@@ -72,6 +73,7 @@ const handleChange = (currentValue: number | undefined) => {
             <span>数量</span>
             <ElInputNumber v-model="num" :min="1" :max="goods.inventory" @change="handleChange" />
           </div>
+          <WwButton type="primary" size="middle" style="margin: 20px 0 0 10px;">加入购物车</WwButton>
         </div>
       </div>
       <!-- 商品推荐 -->
