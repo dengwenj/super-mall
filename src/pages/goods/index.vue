@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+import { ElInputNumber } from 'element-plus'
 
 import { getGoods } from '@/services/api/goods'
 
@@ -13,6 +14,7 @@ import GoodsSku from './components/goods-sku/index.vue'
 
 const goods = ref()
 const route = useRoute()
+const num = ref(1)
 
 watchEffect(async () => {
   if (route.fullPath.includes('/product')) {
@@ -45,6 +47,10 @@ const changeSku = (sku: Record<string, any>) => {
     goods.value.inventory = sku.inventory
   }
 }
+
+const handleChange = (currentValue: number | undefined) => {
+  // console.log(currentValue)
+}
 </script>
 
 <template>
@@ -61,6 +67,11 @@ const changeSku = (sku: Record<string, any>) => {
         <div class="spec">
           <GoodsName :goods="goods" />
           <GoodsSku :goods="goods" sku-id="300078207" @change="changeSku" />
+          <!-- 数量选择 -->
+          <div class="num">
+            <span>数量</span>
+            <ElInputNumber v-model="num" :min="1" :max="goods.inventory" @change="handleChange" />
+          </div>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -93,6 +104,13 @@ const changeSku = (sku: Record<string, any>) => {
   .spec {
     flex: 1;
     padding: 30px 30px 30px 0;
+    .num {
+      margin-left: 10px;
+      color: #999;
+      span {
+        margin-right: 20px;
+      }
+    }
   }
 }
 .goods-footer {
