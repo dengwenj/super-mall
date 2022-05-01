@@ -18,8 +18,9 @@ const emit = defineEmits<{
 }>()
 
 onMounted(async () => {
-  const res = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate`)
-  evaluateComment.value = res.data.result
+  const { data: { result } } = await axios.get(`https://mock.boxuegu.com/mock/1175/goods/${goods?.id}/evaluate`)
+  result.tags.unshift({ title: '全部评论', tagCount: result.evaluateCount }, { title: '有图', tagCount: result.hasPictureCount })
+  evaluateComment.value = result
   emit('evaluateCount', evaluateComment.value.evaluateCount)
 })
 
@@ -53,6 +54,25 @@ const handleClickSort = (idx: number, sortField: string) => {
     sortField
   })
 }
+
+const handleClickTags = (idx: number, title: string) => {
+  activeByIdx.value = idx
+
+  let hasPicture = false
+  let paramsKey
+  if (title === '有图') {
+    hasPicture = true
+    paramsKey = 'hasPicture'
+  } else {
+    paramsKey = 'tags'
+  }
+  
+  requst({
+    page: 1,
+    pageSize: 10,
+    [paramsKey]: hasPicture ? hasPicture : title
+  })
+}
 </script>
 
 <template>
@@ -69,7 +89,7 @@ const handleClickSort = (idx: number, sortField: string) => {
             v-for="(item, index) in evaluateComment?.tags" 
             :key="item.title"
             :class="activeByIdx === index ? 'active' : ''"
-            @click="activeByIdx = index"
+            @click="handleClickTags(index, item.title)"
           >
             {{ item.title }}({{ item.tagCount }})
           </a>
