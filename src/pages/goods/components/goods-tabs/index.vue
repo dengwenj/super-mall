@@ -5,6 +5,11 @@ import GoodsDetail from '../goods-detail/index.vue'
 import GoodsComment from '../goods-comment/index.vue'
 
 const active = ref('goodsDetail')
+const evaluateCount = ref(0)
+
+const handleEvaluateCount = (prop: number) => {
+  evaluateCount.value = prop
+}
 </script>
 
 <template>
@@ -20,12 +25,12 @@ const active = ref('goodsDetail')
         @click="active = 'goodsComment'" 
         :class="active === 'goodsComment' ? 'active' : ''"
       >
-        商品评价<span>(500+)</span>
+        商品评价<span>({{ evaluateCount }})</span>
       </a>
     </nav>
     <!-- 切换内容的地方 -->
     <GoodsDetail v-if="active === 'goodsDetail'" />
-    <GoodsComment v-if="active === 'goodsComment'" />
+    <GoodsComment v-if="active === 'goodsComment'" @evaluateCount="handleEvaluateCount" />
   </div>   
 </template>
 

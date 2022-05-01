@@ -30,3 +30,10 @@ export const getGoodsHot = (params: {id: string, limit: number, type: number}) =
     params
   })
 }
+
+// export const getGoodsComment = (id: string) => {
+//   return request({
+//     method: 'GET',
+//     url: `/goods/${id}/evaluate`
+//   })
+// }
