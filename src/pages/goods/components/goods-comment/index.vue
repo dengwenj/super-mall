@@ -66,7 +66,7 @@ const handleClickTags = (idx: number, title: string) => {
   } else {
     paramsKey = 'tags'
   }
-  
+
   requst({
     page: 1,
     pageSize: 10,
@@ -127,8 +127,8 @@ const handleClickTags = (idx: number, title: string) => {
               :key="itey"
             />
             <span class="attr">
-              <span v-for="itez in item.orderInfo.specs" :key="itez.name">
-                {{itez.name}}：{{ itez.nameValue }}
+              <span style="margin-right: 10px;" v-for="itez in item.orderInfo.specs" :key="itez.name">
+                {{itez.name}}: {{ itez.nameValue }}
               </span>
             </span>
           </div>
