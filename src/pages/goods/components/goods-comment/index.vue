@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import axios, { AxiosResponse } from 'axios'
-import { onMounted, ref, inject, defineEmits } from 'vue'
+import { onMounted, ref, inject, defineEmits, onUpdated } from 'vue'
 import { ElPagination } from 'element-plus'
+import axios from 'axios'
+
+import GoodsCommentImage from './components/goods-comment-image/index.vue'
 
 const goods: Record<string, any> | undefined = inject('goods')
 
@@ -111,6 +113,7 @@ const handleClickSort = (idx: number, sortField: string) => {
             </span>
           </div>
           <div class="text">{{ item.content }}</div>
+          <GoodsCommentImage :pictures="item.pictures" />
           <div class="time">
             <span>{{ item.createTime }}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span>
