@@ -3,7 +3,6 @@ const { defineConfig } = require('@vue/cli-service')
 
 module.exports = defineConfig({
   transpileDependencies: true,
-
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
@@ -12,5 +11,9 @@ module.exports = defineConfig({
         path.resolve(__dirname, 'src/assets/styles/theme.less')
       ]
     }
+  },
+  devServer: {
+    historyApiFallback: true,
+    allowedHosts: 'all',
   }
 })

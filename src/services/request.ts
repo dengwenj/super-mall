@@ -19,7 +19,7 @@ export default function request<T = any>(options: AxiosRequestConfig): Promise<T
       let superMall
       try {
         superMall = JSON.parse(localStorage.getItem('super-mall') || '')
-        const { token } = superMall.user.profile
+        const { token } = superMall.user.profile ?? ''
         if (token) {
           config.headers!.Authorization = `Bearer ${token}`
         }
