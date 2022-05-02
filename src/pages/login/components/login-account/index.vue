@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup, ElMessage } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
 import { accountLogin, mobileLogin } from '@/services/api/login'
@@ -41,6 +41,7 @@ const rules = reactive<FormRules>({
   ]
 })
 const store = useStore()
+const route = useRoute()
 const router = useRouter()
 
 /**
@@ -59,9 +60,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           form
         })
 
-        await accountOrMobilePromise
-        router.push('/')
-        isLoading.value = false
+        try {
+          await accountOrMobilePromise
+          router.push(route.query.redirectUrl as string || '/')
+          isLoading.value = false
+          ElMessage.success('登录成功~')
+        } catch (error: any) {
+          ElMessage({
+            type: 'error',
+            message: error.response.data.message
+          })
+          isLoading.value = false
+        }
       } else {
         isLoading.value = false
       }
@@ -82,8 +92,8 @@ const handleShortMessage = () => {
 
   if (!isShortMessage.value) {
     form.value = {
-      account: '',
-      password: '',
+      account: 'ceshi',
+      password: '123456',
       agree: []
     }
   } else {
