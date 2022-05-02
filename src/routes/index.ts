@@ -7,6 +7,7 @@ const Home = () => import('@/pages/home/index.vue')
 const TopCategory = () => import('@/pages/category/index.vue')
 const SubCategory = () => import('@/pages/category/sub.vue')
 const Product = () => import('@/pages/goods/index.vue')
+const Login = () => import('@/pages/login/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,6 +31,10 @@ const routes: RouteRecordRaw[] = [
         component: Product
       }
     ]
+  },
+  {
+    path: '/login',
+    component: Login
   }
 ]
 
