@@ -124,6 +124,10 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
             clearInterval(timer)
           }
 
+          if (!route.fullPath.includes('/login')) {
+            clearInterval(timer)
+          }
+
           // 模拟两秒钟添加上验证码
           if (time60Code.value === 58) {
             form.value.code = '123456'
@@ -133,6 +137,8 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
         }, 1000)
       } catch (error) {
         console.log(error)
+        ElMessage.error('网络错误~')
+        isTime60Code.value = false
       }
     }
   })
