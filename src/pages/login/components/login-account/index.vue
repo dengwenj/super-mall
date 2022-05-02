@@ -2,6 +2,7 @@
 import { ref, reactive } from 'vue'
 import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup } from 'element-plus'
 
+import { useStore } from '@/store'
 import { accountLogin, mobileLogin } from '@/services/api/login'
 
 import type { FormRules, FormInstance } from 'element-plus'
@@ -15,7 +16,6 @@ const form = ref<ILoginF>({
 })
 const isShortMessage = ref(false)
 const isLoading = ref(false)
-
 const rules = reactive<FormRules>({
   account: [
     { required: true, message: '请输入用户名~', trigger: 'blur' },
@@ -39,6 +39,7 @@ const rules = reactive<FormRules>({
     { required: true, message: '请勾选', trigger: 'blur' }
   ]
 })
+const store = useStore()
 
 /**
  * 处理函数
@@ -51,9 +52,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   const validate = (accountOrMobileLogin: <T>(props: Record<string, any>) => Promise<T>) => {
     formEl.validate(async (valid) => {
       if (valid) {
-        // 发送请求
-        const res = await accountOrMobileLogin(form.value)
-        console.log(res)
+        const accountOrMobilePromise = store.dispatch('user/accountOrMobile', {
+          accountOrMobileLogin,
+          form
+        })
+
+        await accountOrMobilePromise
         isLoading.value = false
       } else {
         isLoading.value = false
