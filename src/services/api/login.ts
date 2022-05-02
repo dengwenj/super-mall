@@ -21,3 +21,13 @@ export const mobileLogin = (data: {
     data
   })
 }
+
+export const mobileMessage = (mobile: string) => {
+  return request({
+    method: 'GET',
+    url: '/login/code',
+    params: {
+      mobile
+    }
+  })
+}

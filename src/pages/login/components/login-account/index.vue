@@ -4,7 +4,7 @@ import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup, ElM
 import { useRoute, useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
-import { accountLogin, mobileLogin } from '@/services/api/login'
+import { accountLogin, mobileLogin, mobileMessage } from '@/services/api/login'
 
 import type { FormRules, FormInstance } from 'element-plus'
 import type { ILoginF } from './types'
@@ -17,6 +17,8 @@ const form = ref<ILoginF>({
 })
 const isShortMessage = ref(false)
 const isLoading = ref(false)
+const isTime60Code = ref(false)
+const time60Code = ref(60)
 const rules = reactive<FormRules>({
   account: [
     { required: true, message: '请输入用户名~', trigger: 'blur' },
@@ -68,7 +70,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         } catch (error: any) {
           ElMessage({
             type: 'error',
-            message: error.response.data.message
+            message: error?.response?.data?.message || '登录失败'
           })
           isLoading.value = false
         }
@@ -98,7 +100,7 @@ const handleShortMessage = () => {
     }
   } else {
     form.value = {
-      mobile: '',
+      mobile: '13211112222',
       code: '',
       agree: []
     }
@@ -106,8 +108,34 @@ const handleShortMessage = () => {
 }
 
 // 发送验证码
-const handleVerificationCode = () => {
-  console.log('发送验证码')
+const handleVerificationCode = (formEl: FormInstance | undefined) => {
+  formEl?.validateField('mobile', async (isValid) => {
+    if (isValid) {
+      isTime60Code.value = true
+
+      try {
+        await mobileMessage(form.value.mobile!)
+
+        let timer: NodeJS.Timer
+        timer = setInterval(() => {
+          if (time60Code.value === 0) {
+            isTime60Code.value = false
+            time60Code.value = 60
+            clearInterval(timer)
+          }
+
+          // 模拟两秒钟添加上验证码
+          if (time60Code.value === 58) {
+            form.value.code = '123456'
+          }
+
+          time60Code.value--
+        }, 1000)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
 }
 
 // qq 登录
@@ -146,11 +174,13 @@ const handleQQ = () => {
           style="width: 148px; margin-right: 10px;" 
         />
         <el-button 
-          style="background-color: #dddfe5; border-color: #dddfe5; color: #666;" 
+          style="background-color: #dddfe5; border-color: #dddfe5; color: #666; width: 102px;" 
           type="primary" 
-          @click="handleVerificationCode"
+          @click="handleVerificationCode(ruleFormRef)"
+          :disabled="isTime60Code"
         >
-          发送验证码
+          <span v-if="!isTime60Code">发送验证码</span>
+          <span v-else>{{ time60Code }} s</span>
         </el-button>
       </el-form-item>
     </template>
