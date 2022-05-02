@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import LoginHeader from './components/login-header/index.vue'
 import LoginFooter from './components/login-footer/index.vue'
+import LoginAccount from './components/login-account/index.vue'
+import LoginScanCode from './components/login-scan-code/index.vue'
+
+const isShowAccountOrScanCode = ref('account')
 </script>
 
 <template>
@@ -9,9 +15,21 @@ import LoginFooter from './components/login-footer/index.vue'
     <img src="../../assets/images/loginlogo.jpeg" alt="">
     <div class="wrapper">
       <nav>
-        <a href="javascript:;">账户登录</a>
-        <a href="javascript:;">扫码登录</a>
+        <a
+          :class="isShowAccountOrScanCode === 'account' ? 'active' : ''"
+          @click="isShowAccountOrScanCode = 'account'"
+        >
+          账户登录
+        </a>
+        <a
+          :class="isShowAccountOrScanCode === 'scanCode' ? 'active' : ''"
+          @click="isShowAccountOrScanCode = 'scanCode'"
+        >
+          扫码登录
+        </a>
       </nav>
+      <LoginAccount v-if="isShowAccountOrScanCode === 'account'" />
+      <LoginScanCode v-if="isShowAccountOrScanCode === 'scanCode'" />
     </div>
   </section>
   <LoginFooter />
@@ -48,6 +66,7 @@ import LoginFooter from './components/login-footer/index.vue'
         display: inline-block;
         font-size: 18px;
         position: relative;
+        cursor: pointer;
         &:first-child {
           border-right: 1px solid #f5f5f5;
           text-align: left;
