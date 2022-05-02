@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElPopover, ElButton } from 'element-plus'
 
 import { useStore } from '@/store'
 
+const visible = ref(false)
+const router = useRouter()
 const store = useStore()
-// 直接写 store.state.user.profile.token 没有响应式
-const token = computed(() => store.state.user.profile.token)
+
+const token = computed(() => store.state.user.profile?.token)
+
+const handleLoign = () => {
+  router.push('/login')
+}
+
+const handleLoginout = () => {
+  router.push('/login')
+  store.commit('user/setUser', null)
+  visible.value = true
+}
 </script>
 
 <template>
@@ -13,11 +27,20 @@ const token = computed(() => store.state.user.profile.token)
     <div class="container">
       <ul>
         <template v-if="token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{store.state.user.profile?.account}}</a></li>
+          <el-popover v-model:visible="visible" placement="bottom" :width="160">
+            <p style="text-align: center;">确定退出登录吗?</p>
+            <div style="text-align: right; margin-top: 10px; ">
+              <el-button style="color: #444;" size="small" type="text" @click="visible = false">取消</el-button>
+              <el-button style="color: #444;" size="small" type="text" @click="handleLoginout">确定</el-button>
+            </div>
+            <template #reference>
+              <li><a href="javascript:;" @click="visible = true">退出登录</a></li>
+            </template>
+          </el-popover>
         </template>
         <template v-else>
-          <li><a href="javascript:;">请先登录</a></li>
+          <li><a href="javascript:;" @click="handleLoign">请先登录</a></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
         <li><a href="javascript:;">我的订单</a></li>

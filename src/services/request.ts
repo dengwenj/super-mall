@@ -16,11 +16,17 @@ export default function request<T = any>(options: AxiosRequestConfig): Promise<T
 
     // 请求拦截
     instance.interceptors.request.use((config) => {
-      const superMall = JSON.parse(localStorage.getItem('super-mall') || '')
-      const { token } = superMall.user.profile
-      if (token) {
-        config.headers!.Authorization = `Bearer ${token}`
+      let superMall
+      try {
+        superMall = JSON.parse(localStorage.getItem('super-mall') || '')
+        const { token } = superMall.user.profile
+        if (token) {
+          config.headers!.Authorization = `Bearer ${token}`
+        }
+      } catch (error) {
+        console.log(error)
       }
+      
       return config
     }, (err) => {
       return Promise.reject(err)

@@ -6,5 +6,5 @@ export interface IUserState {
     account: string,
     mobile: number | null,
     token: string
-  }
+  } | null
 }

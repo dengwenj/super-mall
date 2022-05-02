@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
 import { accountLogin, mobileLogin } from '@/services/api/login'
@@ -40,6 +41,7 @@ const rules = reactive<FormRules>({
   ]
 })
 const store = useStore()
+const router = useRouter()
 
 /**
  * 处理函数
@@ -58,6 +60,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         })
 
         await accountOrMobilePromise
+        router.push('/')
         isLoading.value = false
       } else {
         isLoading.value = false
