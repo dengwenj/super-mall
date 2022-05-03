@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup, ElMessage } from 'element-plus'
+import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup, ElMessage, ElPopover } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
-import { accountLogin, mobileLogin, mobileMessage } from '@/services/api/login'
+import { accountLogin, mobileLogin, mobileMessage, QQUnBind } from '@/services/api/login'
 
 import type { FormRules, FormInstance } from 'element-plus'
 import type { ILoginF } from './types'
@@ -19,6 +19,8 @@ const isShortMessage = ref(false)
 const isLoading = ref(false)
 const isTime60Code = ref(false)
 const time60Code = ref(60)
+const visible = ref(false)
+const phoneCode = ref('13211112222')
 const rules = reactive<FormRules>({
   account: [
     { required: true, message: '请输入用户名~', trigger: 'blur' },
@@ -143,6 +145,17 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
     }
   })
 }
+
+// 解绑 QQ（手机号不再绑定这个 QQ）
+const handleUnbindQQ = async () => {
+  visible.value = false
+  try {
+    await QQUnBind(phoneCode.value)
+    ElMessage.success('解绑成功')
+  } catch (error) {
+    ElMessage.error('解绑失败')
+  }
+}
 </script>
 
 <template>
@@ -204,6 +217,18 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
     <a href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback">
       <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
     </a>
+    <el-popover v-model:visible="visible" placement="bottom" :width="160">
+      <p style="text-align: center;">该手机号解绑QQ吗?</p>
+      <input v-model="phoneCode" class="input">
+      <div style="text-align: right; margin-top: 10px; ">
+        <el-button style="color: #444;" size="small" type="text" @click="visible = false">取消</el-button>
+        <el-button style="color: #444;" size="small" type="text" @click="handleUnbindQQ">确定</el-button>
+      </div>
+      <template #reference>
+        <span class="unbindQQ" @click="visible = true">解绑 QQ</span>
+      </template>
+    </el-popover>
+    
     <div class="url">
       <a href="javascript:;">忘记密码</a>
       <a href="javascript:;">免费注册</a>
@@ -255,5 +280,18 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
         }
       }
     }
+  }
+  .unbindQQ {
+    cursor: pointer;
+    color: #999;
+    &:hover {
+      color: @themeColor;
+    }
+  }
+  .input {
+    outline: none;
+    width: 140px;
+    margin-top: 5px;
+    border-color: @themeColor;
   }
 </style>

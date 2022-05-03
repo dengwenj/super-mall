@@ -57,3 +57,13 @@ export const QQLoginBind = (data: { unionId: string, mobile: string, code: strin
     data
   })
 }
+
+export const QQUnBind = (mobile: string) => {
+  return request({
+    method: 'GET',
+    url: '/login/social/unbind',
+    params: {
+      mobile
+    }
+  })
+}
