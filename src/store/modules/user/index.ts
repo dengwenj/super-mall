@@ -17,12 +17,16 @@ const user: Module<IUserState, IRootState> = {
         account: '',
         mobile: null,
         token: ''
-      }
+      },
+      redirectUrl: '/'
     }
   },
   mutations: {
     setUser(state, payload) {
       state.profile = payload
+    },
+    setRedirectUrl(state, payload) {
+      state.redirectUrl = payload
     }
   },
   actions: {

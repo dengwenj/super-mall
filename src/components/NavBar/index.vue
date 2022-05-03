@@ -18,6 +18,7 @@ const handleLoign = () => {
 const handleLoginout = () => {
   router.push('/login')
   store.commit('user/setUser', null)
+  store.commit('user/setRedirectUrl', '/')
   visible.value = true
 }
 </script>

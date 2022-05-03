@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { useStore } from '@/store'
 
 import LoginHeader from './components/login-header/index.vue'
 import LoginFooter from './components/login-footer/index.vue'
@@ -7,6 +10,12 @@ import LoginAccount from './components/login-account/index.vue'
 import LoginScanCode from './components/login-scan-code/index.vue'
 
 const isShowAccountOrScanCode = ref('account')
+const route = useRoute()
+const store = useStore()
+
+if (route.query.redirectUrl) {
+  store.commit('user/setRedirectUrl', route.query.redirectUrl)
+}
 </script>
 
 <template>

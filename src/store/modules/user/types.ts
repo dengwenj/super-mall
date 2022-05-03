@@ -7,4 +7,5 @@ export interface IUserState {
     mobile: number | null,
     token: string
   } | null
+  redirectUrl: string
 }

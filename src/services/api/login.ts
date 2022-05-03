@@ -31,3 +31,11 @@ export const mobileMessage = (mobile: string) => {
     }
   })
 }
+
+export const QQLogin = (data: { unionId: string, source: number }) => {
+  return request({
+    method: 'POST',
+    url: '/login/social',
+    data
+  })
+}
