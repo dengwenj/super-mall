@@ -13,7 +13,7 @@ import CallbackBind from './components/callback-bind/index.vue'
 import CallbackPatch from './components/callback-patch/index.vue'
 
 const isShowLoading = ref(true)
-const unionId = ref(null)
+const unionId = ref('')
 
 const store = useStore()
 const router = useRouter()

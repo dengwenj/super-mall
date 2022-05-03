@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { defineProps, ref } from 'vue'
 import QC from 'qc'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-import { QQLoginBindCode } from '@/services/api/login'
+import { useStore } from '@/store'
+import { QQLoginBindCode, QQLoginBind } from '@/services/api/login'
 
 
-defineProps<{
-  unionId: string | null
+const props = defineProps<{
+  unionId: string
 }>()
 
 const nickname = ref('')
@@ -19,7 +20,11 @@ const isInputTs = ref(false)
 const ruleValue = ref('')
 const isTime60Code = ref(false)
 const time60Code = ref(60)
+const phone = ref('13211112222')
+const isLoading = ref(false)
 const route = useRoute()
+const router = useRouter()
+const store = useStore()
 
 if (QC.Login.check()) {
   QC.api('get_user_info').success((res: any) => {
@@ -48,6 +53,7 @@ const handleCode = async () => {
       if (time60Code.value === 0) {
         isTime60Code.value = false
         time60Code.value = 60
+        isLoading.value = false
         clearInterval(timer)
       }
 
@@ -57,7 +63,6 @@ const handleCode = async () => {
 
       // 模拟两秒钟添加上验证码
       if (time60Code.value === 58) {
-        // form.value.code = '123456'
         messageRef.value!.value = '123456'
       }
 
@@ -72,6 +77,25 @@ const handleCode = async () => {
     }
   }
 }
+
+// 点击绑定
+const handleSubmit = async () => {
+  if (!(messageRef.value?.value && inputRef.value?.value)) {
+    ElMessage.warning('请填写完整')
+    return
+  }
+
+  isLoading.value = true 
+  try {
+    const res = await QQLoginBind({ unionId: props.unionId, mobile: phone.value, code: messageRef.value!.value })
+    isLoading.value = false
+    store.commit('user/setUser', res.result)
+    router.push(store.state.user.redirectUrl)
+    ElMessage.success('绑定成功~')
+  } catch (error) {
+    ElMessage.error('绑定失败')
+  }
+}
 </script>
 
 <template>
@@ -83,7 +107,7 @@ const handleCode = async () => {
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-phone"></i>
-        <input ref="inputRef" class="input" type="text" placeholder="绑定的手机号" />
+        <input v-model="phone" ref="inputRef" class="input" type="text" placeholder="绑定的手机号" />
         <span v-if="isInputTs" style="color: #ea3323;">{{ ruleValue }}</span>
       </div>
       <div class="error"></div>
@@ -97,7 +121,7 @@ const handleCode = async () => {
       </div>
       <div class="error"></div>
     </div>
-    <a href="javascript:;" class="submit">立即绑定</a>
+    <a href="javascript:;" class="submit" @click="handleSubmit" :style="isLoading ? { cursor: 'not-allowed', backgroundColor: '#bbb' } : ''">立即绑定</a>
   </div>
 </template>
 

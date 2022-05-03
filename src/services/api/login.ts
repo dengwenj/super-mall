@@ -49,3 +49,11 @@ export const QQLoginBindCode = (mobile: string) => {
     }
   })
 }
+
+export const QQLoginBind = (data: { unionId: string, mobile: string, code: string }) => {
+  return request({
+    method: 'POST',
+    url: '/login/social/bind',
+    data
+  })
+}
