@@ -1,12 +1,28 @@
 <script setup lang="ts">
+import { defineProps, ref } from 'vue'
+import QC from 'qc'
 
+defineProps<{
+  unionId: string | null
+}>()
+
+const nickname = ref('')
+const figureurl_1 = ref('')
+
+if (QC.Login.check()) {
+  QC.api('get_user_info').success((res: any) => {
+    const { nickname: name, figureurl_1: figureurl } = res.data
+    nickname.value = name
+    figureurl_1.value = figureurl
+  })
+}
 </script>
 
 <template>
   <div class="xtx-form">
     <div class="user-info">
-      <img src="http://qzapp.qlogo.cn/qzapp/101941968/57C7969540F9D3532451374AA127EE5B/50" alt="" />
-      <p>Hi，Tom 欢迎来小兔鲜，完成绑定后可以QQ账号一键登录哦~</p>
+      <img :src="figureurl_1" alt="" />
+      <p>Hi，欢迎 {{ nickname }}，完成绑定后可以QQ账号一键登录哦~</p>
     </div>
     <div class="xtx-form-item">
       <div class="field">

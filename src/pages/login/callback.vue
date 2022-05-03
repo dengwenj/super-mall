@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import QC from 'qc'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 import { QQLogin } from '@/services/api/login'
 import { useStore } from '@/store'
@@ -11,8 +12,8 @@ import LoginFooter from './components/login-footer/index.vue'
 import CallbackBind from './components/callback-bind/index.vue'
 import CallbackPatch from './components/callback-patch/index.vue'
 
-
 const isShowLoading = ref(true)
+const unionId = ref(null)
 
 const store = useStore()
 const router = useRouter()
@@ -20,12 +21,15 @@ const router = useRouter()
 onMounted(() => {
   if (QC.Login.check()) {
     QC.Login.getMe(async (openId: any) => {
+      unionId.value = openId
+
       try {
         // 登录成功，说明该数据库里面有你的 qq 原来登录过 《注册过已绑定》
         const res = await QQLogin({ unionId: openId, source: 1 })
         const { id, account, avatar, mobile, nickname, token } = res.result
         store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
         router.push(store.state.user.redirectUrl)
+        ElMessage.success('登录成功~')
       } catch (error: any) {
         // 登录失败，数据库里没有这个 qq 《注册过没绑定 或 没注册没绑定》
         console.log(error.response.data)
@@ -58,10 +62,10 @@ const avatar = ref(null)
       </a>
     </nav>
     <div class="tab-content" v-if="hasAccount">
-      <CallbackBind :nickname="nickname" :avatar="avatar" />
+      <CallbackBind :unionId="unionId" />
     </div>
     <div class="tab-content" v-else>
-      <CallbackPatch />
+      <CallbackPatch :unionId="unionId" />
     </div>
   </section>
   <LoginFooter />
