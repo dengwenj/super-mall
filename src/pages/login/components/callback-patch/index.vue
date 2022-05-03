@@ -1,5 +1,26 @@
 <script setup lang="ts">
+import { defineProps, ref } from 'vue'
 
+import { checkOnly } from '@/services/api/login' 
+
+const props = defineProps<{
+  unionId: string
+}>()
+
+const username = ref('')
+const validWithName = ref('')
+
+/**
+ * 处理函数
+ */
+const handleFocus = async () => {
+  const res = await checkOnly(username.value)
+  if (res.result.valid) {
+    validWithName.value = '用户已存在'
+  } else {
+    validWithName.value = ''
+  }
+}
 </script>
 
 <template>
@@ -7,7 +28,8 @@
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-user"></i>
-        <input class="input" type="text" placeholder="请输入用户名" />
+        <input class="input" type="text" v-model="username" placeholder="请输入用户名" @blur="handleFocus" />
+        <span style="color: #ea3323;">{{ validWithName }}</span>
       </div>
       <div class="error"></div>
     </div>

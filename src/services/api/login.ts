@@ -67,3 +67,13 @@ export const QQUnBind = (mobile: string) => {
     }
   })
 }
+
+export const checkOnly = (account: string) => {
+  return request({
+    method: 'GET',
+    url: '/register/check',
+    params: {
+      account
+    }
+  })
+}
