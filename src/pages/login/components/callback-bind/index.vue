@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { defineProps, ref } from 'vue'
 import QC from 'qc'
+import { useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+
+import { QQLoginBindCode } from '@/services/api/login'
+
 
 defineProps<{
   unionId: string | null
@@ -8,6 +13,13 @@ defineProps<{
 
 const nickname = ref('')
 const figureurl_1 = ref('')
+const inputRef = ref<HTMLInputElement>()
+const messageRef = ref<HTMLInputElement>()
+const isInputTs = ref(false)
+const ruleValue = ref('')
+const isTime60Code = ref(false)
+const time60Code = ref(60)
+const route = useRoute()
 
 if (QC.Login.check()) {
   QC.api('get_user_info').success((res: any) => {
@@ -15,6 +27,50 @@ if (QC.Login.check()) {
     nickname.value = name
     figureurl_1.value = figureurl
   })
+}
+
+// 发送验证码
+const handleCode = async () => {
+  if (!(inputRef.value?.value.length! > 6)) {
+    ruleValue.value = '手机号必须大于 6 位'
+    isInputTs.value = true
+    return
+  }
+
+  isInputTs.value = false
+  isTime60Code.value = true
+
+  try {
+    await QQLoginBindCode(inputRef.value?.value!)
+
+    let timer: NodeJS.Timer
+    timer = setInterval(() => {
+      if (time60Code.value === 0) {
+        isTime60Code.value = false
+        time60Code.value = 60
+        clearInterval(timer)
+      }
+
+      if (!route.fullPath.includes('/login')) {
+        clearInterval(timer)
+      }
+
+      // 模拟两秒钟添加上验证码
+      if (time60Code.value === 58) {
+        // form.value.code = '123456'
+        messageRef.value!.value = '123456'
+      }
+
+      time60Code.value--
+    }, 1000)
+  } catch (error: any) {
+    isTime60Code.value = false
+    if (error.response.data.message === '验证码已发送') {
+      ElMessage.error('网络错误')
+    } else {
+      ElMessage.error(error.response.data.message)
+    }
+  }
 }
 </script>
 
@@ -27,15 +83,17 @@ if (QC.Login.check()) {
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-phone"></i>
-        <input class="input" type="text" placeholder="绑定的手机号" />
+        <input ref="inputRef" class="input" type="text" placeholder="绑定的手机号" />
+        <span v-if="isInputTs" style="color: #ea3323;">{{ ruleValue }}</span>
       </div>
       <div class="error"></div>
     </div>
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-code"></i>
-        <input class="input" type="text" placeholder="短信验证码" />
-        <span class="code">发送验证码</span>
+        <input ref="messageRef" class="input" type="text" placeholder="短信验证码" />
+        <span v-if="!isTime60Code" @click="handleCode" class="code">发送验证码</span>
+        <span v-else class="code" style="cursor: not-allowed">{{ time60Code }} s</span>
       </div>
       <div class="error"></div>
     </div>
