@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElCheckboxGroup, ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
+import QC from 'qc'
 
 import { useStore } from '@/store'
 import { accountLogin, mobileLogin, mobileMessage } from '@/services/api/login'
@@ -45,6 +46,12 @@ const rules = reactive<FormRules>({
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
+
+onMounted(() => {
+  QC.Login({
+    btnId: 'qqLoginBtn'
+  })
+})
 
 /**
  * 处理函数
@@ -143,11 +150,6 @@ const handleVerificationCode = (formEl: FormInstance | undefined) => {
     }
   })
 }
-
-// qq 登录
-const handleQQ = () => {
-  console.log('qq')
-}
 </script>
 
 <template>
@@ -205,7 +207,8 @@ const handleQQ = () => {
     </el-form-item>
   </el-form>
   <div class="action">
-    <img @click="handleQQ" src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+    <!-- qq登录 -->
+    <span id="qqLoginBtn"></span>
     <div class="url">
       <a href="javascript:;">忘记密码</a>
       <a href="javascript:;">免费注册</a>
