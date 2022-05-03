@@ -8,6 +8,7 @@ const TopCategory = () => import('@/pages/category/index.vue')
 const SubCategory = () => import('@/pages/category/sub.vue')
 const Product = () => import('@/pages/goods/index.vue')
 const Login = () => import('@/pages/login/index.vue')
+const CallBack = () => import('@/pages/login/callback.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -35,6 +36,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path: '/login/callback',
+    component: CallBack
   }
 ]
 
