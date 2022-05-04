@@ -11,7 +11,7 @@ import type { ILoginF } from './types'
 
 const ruleFormRef = ref<FormInstance>()
 const form = ref<ILoginF>({
-  account: 'ceshi',
+  account: 'dengwj',
   password: '123456',
   agree: []
 })
@@ -96,7 +96,7 @@ const handleShortMessage = () => {
 
   if (!isShortMessage.value) {
     form.value = {
-      account: 'ceshi',
+      account: 'dengwj',
       password: '123456',
       agree: []
     }

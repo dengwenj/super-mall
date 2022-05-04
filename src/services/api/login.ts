@@ -77,3 +77,21 @@ export const checkOnly = (account: string) => {
     }
   })
 }
+
+export const QQPatchcode = (mobile: string) => {
+  return request({
+    method: 'GET',
+    url: '/register/code',
+    params: {
+      mobile
+    }
+  })
+}
+
+export const QQLoginPatch = (unionId: string, data: { mobile: string, code: string, account: string, password: string }) => {
+  return request({
+    method: 'POST',
+    url: `/login/social/${unionId}/complement`,
+    data
+  })
+}
