@@ -30,7 +30,7 @@ const handleClick = () => {
     <a class="curr" href="javascript:;" @click="handleClick" @mousemove="isShowCart = true">
       <i class="iconfont icon-cart"></i><em>{{ getters['cart/validTotal'] }}</em>
     </a>
-    <div class="layer" v-if="store.state.cart.list.length > 0 && $route.fullpath !== '/cart' && isShowCart">
+    <div class="layer" v-if="store.state.cart.list.length > 0 && $route.fullPath !== '/cart' && isShowCart">
       <div class="list">
         <div class="item" v-for="item in getters['cart/validList']" :key="item.id">
           <RouterLink @click="isShowCart = false" :to="`/product/${item.id}`">

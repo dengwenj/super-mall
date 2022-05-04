@@ -94,6 +94,26 @@ const cart: Module<ICartState, IStore> = {
     // 符合列表的总金额
     validAllPrice(state, getters) {
       return getters.validList.reduce((pre: number, item: IListItem) => pre + (item.nowPrice as any * item.count), 0).toFixed(2)
+    },
+    // 无效商品列表
+    invalidList(state) {
+      return state.list.filter((item) => !(item.stock > 0 && item.isEffective))
+    },
+    // 已选商品列表
+    selectedList(state, getters) {
+      return getters.validList.filter((item: IListItem) => item.selected)
+    },
+    // 已选商品总件数
+    selectedTotal(state, getters) {
+      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + item.count, 0)
+    },
+    // 已选商品总金额
+    selectedAllPrice(state, getters) {
+      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + item.count * (item.nowPrice as any), 0).toFixed(2)
+    },
+    // 是否全选
+    isCheckAll(state, getters) {
+      return getters.validList.length === getters.selectedList.length && getters.validList.length !== 0
     }
   }
 }

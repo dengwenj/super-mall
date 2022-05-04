@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElInputNumber, ElCheckbox } from 'element-plus'
+
+import { useStore } from '@/store'
 
 import GoodRelevant from '@/pages/goods/components/goods-relevant/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 
 const num = ref(1)
+
+const store = useStore()
+const getters = computed(() => store.getters)
 </script>
 
 <template>
@@ -17,7 +22,7 @@ const num = ref(1)
         <table>
           <thead>
             <tr>
-              <th width="120"><ElCheckbox label="全选" size="large" /></th>
+              <th width="120"><ElCheckbox :model-value="getters['cart/isCheckAll']" label="全选" size="large" /></th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
               <th width="180">数量</th>
@@ -27,25 +32,25 @@ const num = ref(1)
           </thead>
           <!-- 有效商品 -->
           <tbody>
-            <tr v-for="i in 3" :key="i">
-              <td><ElCheckbox size="large" /></td>
+            <tr v-for="item in getters['cart/validList']" :key="item.skuId">
+              <td><ElCheckbox :model-value="item.selected" size="large" /></td>
               <td>
                 <div class="goods">
-                  <RouterLink to="/"><img src="https://yanxuan-item.nosdn.127.net/13ab302f8f2c954d873f03be36f8fb03.png" alt=""></RouterLink>
+                  <RouterLink :to="`/product/${item.id}`"><img :src="item.picture" alt=""></RouterLink>
                   <div>
-                    <p class="name ellipsis">和手足干裂说拜拜 ingrams手足皲裂修复霜</p>
+                    <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
                   </div>
                 </div>
               </td>
               <td class="tc">
-                <p>&yen;200.00</p>
-                <p>比加入时降价 <span class="red">&yen;20.00</span></p>
+                <p>&yen;{{ item.nowPrice }}</p>
+                <p v-if="item.price - item.nowPrice > 0">比加入时降价 <span class="red">&yen;{{ item.price - item.nowPrice }}</span></p>
               </td>
               <td class="tc">
                 <ElInputNumber :min="1" v-model="num" />
               </td>
-              <td class="tc"><p class="f16 red">&yen;200.00</p></td>
+              <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
                 <p><a class="green" href="javascript:;">删除</a></p>
@@ -54,22 +59,22 @@ const num = ref(1)
             </tr>
           </tbody>
           <!-- 无效商品 -->
-          <tbody>
+          <tbody v-if="getters['cart/invalidList'].length">
             <tr><td colspan="6"><h3 class="tit">失效商品</h3></td></tr>
-            <tr v-for="i in 3" :key="i">
+            <tr v-for="item in getters['cart/invalidList']" :key="item.skuId">
               <td><ElCheckbox size="large" style="color: #eee" /></td>
               <td>
                 <div class="goods">
-                  <RouterLink to="/"><img src="https://yanxuan-item.nosdn.127.net/13ab302f8f2c954d873f03be36f8fb03.png" alt=""></RouterLink>
+                  <RouterLink :to="`/product/${item.id}`"><img :src="item.picture" alt=""></RouterLink>
                   <div>
-                    <p class="name ellipsis">和手足干裂说拜拜 ingrams手足皲裂修复霜</p>
-                    <p class="attr">颜色：粉色 尺寸：14cm 产地：中国</p>
+                    <p class="name ellipsis">{{ item.name }}</p>
+                    <p class="attr">{{ item.attrsText }}</p>
                   </div>
                 </div>
               </td>
-              <td class="tc"><p>&yen;200.00</p></td>
+              <td class="tc"><p>&yen;{{ item.price }}</p></td>
               <td class="tc">1</td>
-              <td class="tc"><p>&yen;200.00</p></td>
+              <td class="tc"><p>&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
                 <p><a class="green" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
@@ -81,14 +86,14 @@ const num = ref(1)
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          <ElCheckbox label="全选" size="large" />
+          <ElCheckbox :model-value="getters['cart/isCheckAll']" label="全选" size="large" />
           <a href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
         </div>
         <div class="total">
-          共 7 件商品，已选择 2 件，商品合计：
-          <span class="red">¥400</span>
+          共 {{ getters['cart/validTotal'] }} 件商品，已选择 {{ getters['cart/selectedTotal'] }} 件，商品合计：
+          <span class="red">¥{{ getters['cart/selectedAllPrice'] }}</span>
           <WwButton type="primary">下单结算</WwButton>
         </div>
       </div>
