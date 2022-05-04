@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import HeaderNav from '@/components/HeaderNav/index.vue'
 import { useStore } from '@/store'
+
+import HeaderNav from '@/components/HeaderNav/index.vue'
+import HeaderCart from '../header-car/index.vue'
 
 const store = useStore()
 
@@ -32,11 +34,8 @@ const handleClick = () => {
           <i class="iconfont icon-search"></i>
           <input type="text" placeholder="搜一搜">
         </div>
-        <div class="cart">
-          <a class="curr" href="#">
-            <i class="iconfont icon-cart"></i><em>2</em>
-          </a>
-        </div>
+        <!-- 购物车 -->
+        <HeaderCart />
       </div>
       <div class="right" v-else>
         <router-link to="/" >品牌</router-link>
@@ -116,7 +115,7 @@ const handleClick = () => {
           top: 0;
           padding: 1px 6px;
           line-height: 1;
-          // background: @helpColor;
+          background: @themeColor;
           color: #fff;
           font-size: 12px;
           border-radius: 10px;

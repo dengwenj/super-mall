@@ -35,6 +35,20 @@ const cart: Module<ICartState, IStore> = {
         }
       })
     }
+  },
+  getters: {
+    // 符合的列表
+    validList(state) {
+      return state.list.filter((item) => item.stock > 0 && item.isEffective)
+    },
+    // 符合列表的总件数
+    validTotal(state, getters) {
+      return getters.validList.reduce((pre: number, item: IListItem) => pre + item.count, 0)
+    },
+    // 符合列表的总金额
+    validAllPrice(state, getters) {
+      return getters.validList.reduce((pre: number, item: IListItem) => pre + (item.nowPrice as any * item.count), 0).toFixed(2)
+    }
   }
 }
 
