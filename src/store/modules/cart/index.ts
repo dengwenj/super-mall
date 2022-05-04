@@ -34,6 +34,12 @@ const cart: Module<ICartState, IStore> = {
           }
         }
       }
+    },
+    removeGoods(state, skuId) {
+      state.list.splice(
+        state.list.findIndex((item) => item.skuId === skuId),
+        1
+      )
     }
   },
   actions: {
@@ -57,11 +63,21 @@ const cart: Module<ICartState, IStore> = {
             return getNewGoodsBySkuId(item.skuId)
           })
           const newGoodsList = await Promise.all(promiseList)
-          console.log(newGoodsList)
+
           newGoodsList.forEach((item, idx) => {
             commit('updateGoods', { skuId: state.list[idx].skuId, ...item.result })
           })
           resolve('购物车本地商品更新成功')
+        }
+      })
+    },
+    removeGoods({ commit, rootState }, skuId) {
+      return new Promise((resolve, reject) => {
+        if (rootState.user.profile?.token) {
+          
+        } else {
+          commit('removeGoods', skuId)
+          resolve('删除成功')
         }
       })
     }

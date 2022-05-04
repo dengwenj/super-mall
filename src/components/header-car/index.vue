@@ -13,6 +13,13 @@ const getters = computed(() => store.getters)
 onMounted(async () => {
   ElMessage.success(await store.dispatch('cart/getNewGoods'))
 })
+
+/**
+ * 处理函数
+ */
+const handleRemoveGoods = (skuId: string) => {
+  store.dispatch('cart/removeGoods', skuId)
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ onMounted(async () => {
     <a class="curr" href="javascript:;">
       <i class="iconfont icon-cart"></i><em>{{ getters['cart/validTotal'] }}</em>
     </a>
-    <div class="layer">
+    <div class="layer" v-if="store.state.cart.list.length > 0 && $route.fullpath !== '/cart'">
       <div class="list">
         <div class="item" v-for="item in getters['cart/validList']" :key="item.id">
           <RouterLink to="">
@@ -34,7 +41,7 @@ onMounted(async () => {
               <p class="count">x{{ item.count }}</p>
             </div>
           </RouterLink>
-          <i class="iconfont icon-close-new"></i>
+          <i class="iconfont icon-close-new" @click="handleRemoveGoods(item.skuId)"></i>
         </div>
       </div>
       <div class="foot">
