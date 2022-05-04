@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick, provide } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElInputNumber } from 'element-plus'
+import { ElInputNumber, ElMessage } from 'element-plus'
 
+import { useStore } from '@/store'
 import { getGoods } from '@/services/api/goods'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
@@ -19,6 +20,9 @@ import GoodsWarn from './components/goods-warn/index.vue'
 const goods = ref()
 const route = useRoute()
 const num = ref(1)
+const currentSku = ref()
+
+const store = useStore()
 
 watchEffect(async () => {
   if (route.fullPath.includes('/product')) {
@@ -50,15 +54,42 @@ const breadcrumb = computed(() => [
 ])
 
 const changeSku = (sku: Record<string, any>) => {
+  console.log(sku)
   if (sku.skuId) {
     goods.value.price = sku.price
     goods.value.oldPrice = sku.oldPrice
     goods.value.inventory = sku.inventory
   }
+  currentSku.value = sku
 }
 
 const handleChange = (currentValue: number | undefined) => {
   // console.log(currentValue)
+}
+
+// 加入购物车
+const handleAddCart = async () => {
+  const { skuId, specsText: attrsText, inventory: stock } = currentSku.value
+  const { id, name, price, mainPictures } = goods.value
+  
+  if (currentSku.value?.skuId) {
+    await store.dispatch('cart/addCart', {
+      skuId,
+      attrsText,
+      stock,
+      id,
+      name,
+      price,
+      nowPrice: price,
+      picture: mainPictures[0],
+      selected: true,
+      isEffective: true,
+      count: num.value
+    })
+    ElMessage.success('加入购物成功')
+  } else {
+    ElMessage.warning('请选完整规格')
+  }
 }
 </script>
 
@@ -75,13 +106,13 @@ const handleChange = (currentValue: number | undefined) => {
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
-          <GoodsSku :goods="goods" sku-id="300078207" @change="changeSku" />
+          <GoodsSku :goods="goods" @change="changeSku" />
           <!-- 数量选择 -->
           <div class="num">
             <span>数量</span>
             <ElInputNumber v-model="num" :min="1" :max="goods.inventory" @change="handleChange" />
           </div>
-          <WwButton type="primary" size="middle" style="margin: 20px 0 0 10px;">加入购物车</WwButton>
+          <WwButton type="primary" size="middle" style="margin: 20px 0 0 10px;" @click="handleAddCart">加入购物车</WwButton>
         </div>
       </div>
       <!-- 商品推荐 -->

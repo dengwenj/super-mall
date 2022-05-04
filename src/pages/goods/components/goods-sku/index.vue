@@ -98,23 +98,23 @@ const handleClick = (values: any[], val: Record<string, any>) => {
   }
 
   updateDisabledStatus(props.goods.specs, pathMap)
-}
 
-// 触发change事件将sku数据传递出去
-const selectedArr = getSelectedArr(props.goods.specs).filter(v => v)
-if (selectedArr.length === props.goods.specs.length) {
-  const skuIds = (pathMap as any)[selectedArr.join(spliter)]
-  const sku = props.goods.skus.find((sku: any) => sku.id === skuIds[0])
-  // 传递
-  emit('change', {
-    skuId: sku.id,
-    price: sku.price,
-    oldPrice: sku.oldPrice,
-    inventory: sku.inventory,
-    specsText: sku.specs.reduce((p: any, n: any) => `${p} ${n.name}：${n.valueName}`, '').replace(' ', '')
-  })
-} else {
-  emit('change', {})
+  // 触发change事件将sku数据传递出去
+  const selectedArr = getSelectedArr(props.goods.specs).filter(v => v)
+  if (selectedArr.length === props.goods.specs.length) {
+    const skuIds = (pathMap as any)[selectedArr.join(spliter)]
+    const sku = props.goods.skus.find((sku: any) => sku.id === skuIds[0])
+    // 传递
+    emit('change', {
+      skuId: sku.id,
+      price: sku.price,
+      oldPrice: sku.oldPrice,
+      inventory: sku.inventory,
+      specsText: sku.specs.reduce((p: any, n: any) => `${p} ${n.name}：${n.valueName}`, '').replace(' ', '')
+    })
+  } else {
+    emit('change', {})
+  }
 }
 </script>
 

@@ -6,10 +6,10 @@ import { user, cart, category } from './modules'
 import type { Store } from 'vuex'
 import type { IRootState, IStore } from './types'
 
-const store = createStore<IRootState>({
-  state: {
-    count: 0
-  },
+const store = createStore<any>({
+  // state: {
+  //   count: 0
+  // },
   modules: {
     user,
     cart,
