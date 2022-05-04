@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { useStore } from '@/store'
 
@@ -8,6 +9,10 @@ import WwButton from '../lib/WwButton.vue'
 const store = useStore()
 
 const getters = computed(() => store.getters)
+
+onMounted(async () => {
+  ElMessage.success(await store.dispatch('cart/getNewGoods'))
+})
 </script>
 
 <template>

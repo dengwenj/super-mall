@@ -69,10 +69,10 @@ const handleChange = (currentValue: number | undefined) => {
 
 // 加入购物车
 const handleAddCart = async () => {
-  const { skuId, specsText: attrsText, inventory: stock } = currentSku.value
-  const { id, name, price, mainPictures } = goods.value
-  
   if (currentSku.value?.skuId) {
+    const { skuId, specsText: attrsText, inventory: stock } = currentSku.value
+    const { id, name, price, mainPictures } = goods.value
+
     await store.dispatch('cart/addCart', {
       skuId,
       attrsText,
