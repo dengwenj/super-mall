@@ -26,14 +26,20 @@ const cart: Module<ICartState, IStore> = {
       state.list.unshift(payload)
     },
     updateGoods(state, payload) {
-      const goods = state.list.find((item) => item.skuId === payload.skuId)
-      if (goods) {
-        for (const key in payload) {
-          if (payload[key] !== null && payload !== '') {
-            (goods as any)[key] = payload[key]
+      if (Object.keys(payload).includes('skuId')) {
+        const goods = state.list.find((item) => item.skuId === payload.skuId)
+        if (goods) {
+          for (const key in payload) {
+            if (payload[key] !== null && payload !== '') {
+              (goods as any)[key] = payload[key]
+            }
           }
         }
+        return
       }
+
+      // payload 对象里面没有 skuId 属性，是否全选
+      state.list.forEach((item) => item.selected = payload.selected)
     },
     removeGoods(state, skuId) {
       state.list.splice(
@@ -78,6 +84,16 @@ const cart: Module<ICartState, IStore> = {
         } else {
           commit('removeGoods', skuId)
           resolve('删除成功')
+        }
+      })
+    },
+    updateGoods({ commit, rootState }, payload: Record<string, any>) {
+      return new Promise((resolve, reject) => {
+        if (rootState.user.profile?.token) {
+          
+        } else {
+          commit('updateGoods', payload)
+          resolve('修改成功')
         }
       })
     }

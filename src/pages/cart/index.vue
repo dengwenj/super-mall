@@ -12,6 +12,19 @@ const num = ref(1)
 
 const store = useStore()
 const getters = computed(() => store.getters)
+
+/**
+ * 处理函数
+ */
+// 单选
+const handleChange = (skuId: string, selected: boolean) => {
+  store.dispatch('cart/updateGoods', { skuId, selected: !selected })
+}
+
+// 是否全选
+const handleCheckAll = () => {
+  store.dispatch('cart/updateGoods', { selected: !getters.value['cart/isCheckAll'] })
+}
 </script>
 
 <template>
@@ -22,7 +35,9 @@ const getters = computed(() => store.getters)
         <table>
           <thead>
             <tr>
-              <th width="120"><ElCheckbox :model-value="getters['cart/isCheckAll']" label="全选" size="large" /></th>
+              <th width="120">
+                <ElCheckbox @change="handleCheckAll" :model-value="getters['cart/isCheckAll']" label="全选" size="large" />
+              </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
               <th width="180">数量</th>
@@ -33,7 +48,7 @@ const getters = computed(() => store.getters)
           <!-- 有效商品 -->
           <tbody>
             <tr v-for="item in getters['cart/validList']" :key="item.skuId">
-              <td><ElCheckbox :model-value="item.selected" size="large" /></td>
+              <td><ElCheckbox @change="handleChange(item.skuId, item.selected)" :model-value="item.selected" size="large" /></td>
               <td>
                 <div class="goods">
                   <RouterLink :to="`/product/${item.id}`"><img :src="item.picture" alt=""></RouterLink>
@@ -48,7 +63,7 @@ const getters = computed(() => store.getters)
                 <p v-if="item.price - item.nowPrice > 0">比加入时降价 <span class="red">&yen;{{ item.price - item.nowPrice }}</span></p>
               </td>
               <td class="tc">
-                <ElInputNumber :min="1" v-model="num" />
+                <ElInputNumber :min="1" :model-value="item.count" />
               </td>
               <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
@@ -86,7 +101,7 @@ const getters = computed(() => store.getters)
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          <ElCheckbox :model-value="getters['cart/isCheckAll']" label="全选" size="large" />
+          <ElCheckbox @change="handleCheckAll" :model-value="getters['cart/isCheckAll']" label="全选" size="large" />
           <a href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
