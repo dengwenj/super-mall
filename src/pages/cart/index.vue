@@ -7,6 +7,7 @@ import { useStore } from '@/store'
 import GoodRelevant from '@/pages/goods/components/goods-relevant/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import { IListItem } from '@/store/modules/cart/types'
 
 const num = ref(1)
 
@@ -24,6 +25,11 @@ const handleChange = (skuId: string, selected: boolean) => {
 // 是否全选
 const handleCheckAll = () => {
   store.dispatch('cart/updateGoods', { selected: !getters.value['cart/isCheckAll'] })
+}
+
+// 删除商品
+const handleRemove = (skuId: string) => {
+ store.dispatch('cart/removeGoods', skuId)
 }
 </script>
 
@@ -68,7 +74,7 @@ const handleCheckAll = () => {
               <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p><a class="green" @click="handleRemove(item.skuId)" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
