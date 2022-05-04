@@ -9,6 +9,7 @@ const SubCategory = () => import('@/pages/category/sub.vue')
 const Product = () => import('@/pages/goods/index.vue')
 const Login = () => import('@/pages/login/index.vue')
 const CallBack = () => import('@/pages/login/callback.vue')
+const Cart = () => import('@/pages/cart/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,6 +31,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/product/:id',
         component: Product
+      },
+      {
+        path: '/cart',
+        component: Cart
       }
     ]
   },

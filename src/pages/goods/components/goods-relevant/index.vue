@@ -12,7 +12,7 @@ const goodsRelevant = ref()
 
 watchEffect(async () => {
   const res = await getGoodsRelevant({
-    id: props.goods.id,
+    id: props.goods?.id || '',
     limit: 16
   })
   const arr = []
@@ -29,7 +29,7 @@ watchEffect(async () => {
   <div class="goods-relevant">
     <div class="header">
       <i class="icon" />
-      <span class="title">同类商品推荐</span>
+      <span class="title">{{ props.goods?.id ? '同类商品推荐' : '猜你喜欢' }}</span>
     </div>
 
     <el-carousel class="carousel" :interval="5000" trigger="click" height="380px" arrow="always">

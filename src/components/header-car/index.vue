@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
 
 import WwButton from '../lib/WwButton.vue'
 
+const isShowCart = ref(false)
+
 const store = useStore()
+const router = useRouter()
 
 const getters = computed(() => store.getters)
-
-onMounted(async () => {
-  ElMessage.success(await store.dispatch('cart/getNewGoods'))
-})
 
 /**
  * 处理函数
@@ -20,17 +19,21 @@ onMounted(async () => {
 const handleRemoveGoods = (skuId: string) => {
   store.dispatch('cart/removeGoods', skuId)
 }
+
+const handleClick = () => {
+  router.push('/cart')
+}
 </script>
 
 <template>
   <div class="cart">
-    <a class="curr" href="javascript:;">
+    <a class="curr" href="javascript:;" @click="handleClick" @mousemove="isShowCart = true">
       <i class="iconfont icon-cart"></i><em>{{ getters['cart/validTotal'] }}</em>
     </a>
-    <div class="layer" v-if="store.state.cart.list.length > 0 && $route.fullpath !== '/cart'">
+    <div class="layer" v-if="store.state.cart.list.length > 0 && $route.fullpath !== '/cart' && isShowCart">
       <div class="list">
         <div class="item" v-for="item in getters['cart/validList']" :key="item.id">
-          <RouterLink to="">
+          <RouterLink @click="isShowCart = false" :to="`/product/${item.id}`">
             <img :src="item.picture" alt="">
             <div class="center">
               <p class="name ellipsis-2">{{ item.name }}</p>
@@ -49,7 +52,7 @@ const handleRemoveGoods = (skuId: string) => {
           <p>共 {{ getters['cart/validTotal'] }} 件商品</p>
           <p>&yen;{{ getters['cart/validAllPrice'] }}</p>
         </div>
-        <WwButton type="primary">去购物车结算</WwButton>
+        <WwButton type="primary" @click="handleClick">去购物车结算</WwButton>
       </div>
     </div>
   </div>

@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { useStore } from '@/store'
 
 import HeaderNav from '@/components/HeaderNav/index.vue'
 import HeaderCart from '../header-car/index.vue'
 
-const store = useStore()
-
 defineProps<{
   isFixed?: boolean
 }>()
+
+const store = useStore()
+
+onMounted(async () => {
+  ElMessage.success(await store.dispatch('cart/getNewGoods'))
+})
 
 const handleClick = () => {
   localStorage.setItem('categoryId', '')
