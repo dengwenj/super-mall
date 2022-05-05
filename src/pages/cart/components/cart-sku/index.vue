@@ -2,12 +2,19 @@
 import { defineProps, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-defineProps<{
+import { getGoodsSku } from '@/services/api/cart'
+
+import GoodsSku from '@/pages/goods/components/goods-sku/index.vue'
+
+const props = defineProps<{
   attrsText: string
+  skuId: string
 }>()
 
 const isShowCartSku = ref(false)
 const cartSkuRef = ref()
+const goods = ref()
+const isLoading = ref(false)
 
 onClickOutside(cartSkuRef, () => {
   isShowCartSku.value = false
@@ -16,7 +23,16 @@ onClickOutside(cartSkuRef, () => {
 /**
  * 处理函数
  */
-const handleClick = () => {
+const handleClick = async () => {
+  if (!isShowCartSku.value) {
+    isLoading.value = true
+    isShowCartSku.value = !isShowCartSku.value
+    const res = await getGoodsSku(props.skuId)
+    goods.value = res.result
+    isLoading.value = false
+    return
+  }
+
   isShowCartSku.value = !isShowCartSku.value
 }
 </script>
@@ -28,7 +44,8 @@ const handleClick = () => {
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="layer" v-if="isShowCartSku">
-      <div class="loading">加载中...</div>
+      <div class="loading" v-if="isLoading">加载中...</div>
+      <GoodsSku v-else :goods="goods" :skuId="skuId" />
     </div>
   </div>
 </template>

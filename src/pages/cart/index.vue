@@ -93,7 +93,7 @@ const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
                   <div>
                     <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
-                    <CartSku :attrsText="item.attrsText" />
+                    <CartSku :skuId="item.skuId" :attrsText="item.attrsText" />
                   </div>
                 </div>
               </td>

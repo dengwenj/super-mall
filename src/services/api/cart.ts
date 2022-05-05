@@ -6,3 +6,10 @@ export const getNewGoodsBySkuId = (skuId: string) => {
     url: `/goods/stock/${skuId}`
   })
 }
+
+export const getGoodsSku = (skuId: string) => {
+  return request({
+    method: 'GET',
+    url: `/goods/sku/${skuId}`
+  })
+}
