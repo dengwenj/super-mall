@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, unref } from 'vue'
+import { computed } from 'vue'
 import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton, ElMessage } from 'element-plus'
 
 import { useStore } from '@/store'
@@ -8,6 +8,7 @@ import GoodRelevant from '@/pages/goods/components/goods-relevant/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import CartNone from './components/cart-none/index.vue'
+import CartSku from './components/cart-sku/index.vue'
 
 import type { IListItem } from '@/store/modules/cart/types'
 
@@ -92,6 +93,7 @@ const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
                   <div>
                     <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
+                    <CartSku :attrsText="item.attrsText" />
                   </div>
                 </div>
               </td>
