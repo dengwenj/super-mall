@@ -19,6 +19,7 @@ const handleLoginout = () => {
   router.push('/login')
   store.commit('user/setUser', null)
   store.commit('user/setRedirectUrl', '/')
+  store.commit('cart/setList', [])
   visible.value = true
 }
 </script>

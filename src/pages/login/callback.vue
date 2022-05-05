@@ -30,6 +30,8 @@ onMounted(() => {
         store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
         router.push(store.state.user.redirectUrl)
         ElMessage.success('登录成功~')
+        await store.dispatch('cart/mergeCart')
+        store.dispatch('cart/getNewGoods')
       } catch (error: any) {
         // 登录失败，数据库里没有这个 qq 《注册过没绑定 或 没注册没绑定》
         console.log(error.response.data)

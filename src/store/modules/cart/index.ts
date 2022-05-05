@@ -1,7 +1,7 @@
 /**
  * 购物车模块
  */
-import { getNewGoodsBySkuId } from '@/services/api/cart'
+import { getNewGoodsBySkuId, mergeCartGoods, getCartList } from '@/services/api/cart'
 
 import type { IStore } from '@/store/types'
 import type { Module } from 'vuex'
@@ -50,13 +50,16 @@ const cart: Module<ICartState, IStore> = {
     // 批量删除
     batchRemoveGoods(state, payload) {
       state.list = payload
+    },
+    setList(state, payload) {
+      state.list = payload
     }
   },
   actions: {
     addCart({ commit, rootState }, payload: IListItem) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (rootState.user.profile?.token) {
-          
+
         } else {
           commit('addCart', payload)
           resolve('加入本地成功')
@@ -66,7 +69,9 @@ const cart: Module<ICartState, IStore> = {
     getNewGoods({ commit, rootState, state }, payload) {
       return new Promise(async (resolve, reject) => {
         if (rootState.user.profile?.token) {
-          
+          // 获取登录的购物车列表
+          const res = await getCartList()
+          commit('setList', res.result)
         } else {
           // 用 Promise.all 同时发送请求，统一处理
           const promiseList = state.list.map((item) => {
@@ -135,6 +140,22 @@ const cart: Module<ICartState, IStore> = {
         }
       })
     },
+    // 合并购物车
+    mergeCart({ commit, state }) {
+      return new Promise(async (resolve, reject) => {
+        const goodsListMap = state.list.map((item: IListItem) => {
+          return {
+            skuId: item.skuId,
+            selected: item.selected,
+            count: item.count
+          }
+        })
+        await mergeCartGoods(goodsListMap)
+        // 合并成功把本地的清除
+        commit('setList', [])
+        resolve('合并成功')
+      })
+    }
   },
   getters: {
     // 符合的列表

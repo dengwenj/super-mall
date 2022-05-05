@@ -69,6 +69,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           router.push(route.query.redirectUrl as string || '/')
           isLoading.value = false
           ElMessage.success('登录成功~')
+          await store.dispatch('cart/mergeCart')
+          // 合并完了在获取最新的商品列表，因为这个异步的，不知道谁先执行完
+          store.dispatch('cart/getNewGoods')
         } catch (error: any) {
           ElMessage({
             type: 'error',

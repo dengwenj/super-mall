@@ -14,7 +14,8 @@ defineProps<{
 const store = useStore()
 
 onMounted(async () => {
-  ElMessage.success(await store.dispatch('cart/getNewGoods'))
+  const res = await store.dispatch('cart/getNewGoods')
+  ElMessage.success(res)
 })
 
 const handleClick = () => {

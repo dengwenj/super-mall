@@ -92,6 +92,8 @@ const handleSubmit = async () => {
     store.commit('user/setUser', res.result)
     router.push(store.state.user.redirectUrl)
     ElMessage.success('绑定成功~')
+    await store.dispatch('cart/mergeCart')
+    store.dispatch('cart/getNewGoods')
   } catch (error) {
     ElMessage.error('绑定失败')
   }

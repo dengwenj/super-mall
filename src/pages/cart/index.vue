@@ -114,7 +114,7 @@ const updateCartSku = (oldSkuId: string, newSku: any) => {
                   @blur="(e) => handleInputNumber(item.skuId, e)"
                 />
               </td>
-              <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
+              <td class="tc"><p class="f16 red">&yen;{{ (item.nowPrice * item.count).toFixed(2) }}</p></td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
                 <ElPopconfirm
