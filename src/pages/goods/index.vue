@@ -86,7 +86,7 @@ const handleAddCart = async () => {
       isEffective: true,
       count: num.value
     })
-    ElMessage.success('加入购物成功')
+    ElMessage.success('加入购物车成功')
   } else {
     ElMessage.warning('请选完整规格')
   }

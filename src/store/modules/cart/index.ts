@@ -1,7 +1,15 @@
 /**
  * 购物车模块
  */
-import { getNewGoodsBySkuId, mergeCartGoods, getCartList } from '@/services/api/cart'
+import { 
+  getNewGoodsBySkuId,
+  mergeCartGoods,
+  getCartList, 
+  addCartGoods,
+  removeCartGoods,
+  updateCartGoods,
+  allCheckSelected
+} from '@/services/api/cart'
 
 import type { IStore } from '@/store/types'
 import type { Module } from 'vuex'
@@ -59,7 +67,9 @@ const cart: Module<ICartState, IStore> = {
     addCart({ commit, rootState }, payload: IListItem) {
       return new Promise(async (resolve, reject) => {
         if (rootState.user.profile?.token) {
-
+          await addCartGoods({ skuId: payload.skuId, count: payload.count })
+          commit('addCart', payload)
+          resolve('加入购物车成功')
         } else {
           commit('addCart', payload)
           resolve('加入本地成功')
@@ -72,6 +82,7 @@ const cart: Module<ICartState, IStore> = {
           // 获取登录的购物车列表
           const res = await getCartList()
           commit('setList', res.result)
+          // resolve('')
         } else {
           // 用 Promise.all 同时发送请求，统一处理
           const promiseList = state.list.map((item) => {
@@ -87,19 +98,30 @@ const cart: Module<ICartState, IStore> = {
       })
     },
     removeGoods({ commit, rootState }, skuId) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (rootState.user.profile?.token) {
-          
+          await removeCartGoods({ ids: [skuId] })
+          commit('removeGoods', skuId)
+          resolve('删除成功')
         } else {
           commit('removeGoods', skuId)
           resolve('删除成功')
         }
       })
     },
-    updateGoods({ commit, rootState }, payload: Record<string, any>) {
-      return new Promise((resolve, reject) => {
+    updateGoods({ commit, rootState, state }, payload: Record<string, any>) {
+      return new Promise(async (resolve, reject) => {
         if (rootState.user.profile?.token) {
-          
+          if (Object.keys(payload).includes('skuId')) {
+            await updateCartGoods(payload.skuId, { [Object.keys(payload)[1]]: payload[Object.keys(payload)[1]] })
+            commit('updateGoods', payload)
+            resolve('修改成功')
+          } else {
+            const allSkuIdList = state.list.map((item) => item.skuId)
+            await allCheckSelected({ selected: payload.selected, ids: allSkuIdList })
+            commit('updateGoods', payload)
+            resolve('修改成功')
+          }
         } else {
           commit('updateGoods', payload)
           resolve('修改成功')
@@ -108,13 +130,26 @@ const cart: Module<ICartState, IStore> = {
     },
     // 批量删除
     batchRemoveGoods({ commit, rootState, getters }, isClearInvalidGoods: boolean) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
+        // 提到顶部
+        const GoodsSelectedWithFalseList = getters.validList.filter((item: IListItem) => !item.selected)
+
         if (rootState.user.profile?.token) {
-          
+          if (!isClearInvalidGoods) {
+            const removeSkuIdList = getters.validList
+              .filter((item: IListItem) => item.selected)
+              .map((item: IListItem) => item.skuId)
+            await removeCartGoods({ ids: removeSkuIdList })
+            commit('batchRemoveGoods', GoodsSelectedWithFalseList)
+          } else {
+            const clearInvalidGoodsSKuIdList = getters.invalidList.map((item: IListItem) => item.skuId)
+            await removeCartGoods({ ids: clearInvalidGoodsSKuIdList, clearInvalid: isClearInvalidGoods })
+            commit('batchRemoveGoods', getters.validList)
+          }
+          resolve('批量删除成功') 
         } else {
           // 批量删除已选中的
           if (!isClearInvalidGoods) {
-            const GoodsSelectedWithFalseList = getters.validList.filter((item: IListItem) => !item.selected)
             commit('batchRemoveGoods', GoodsSelectedWithFalseList)
           } else {
             commit('batchRemoveGoods', getters.validList)
