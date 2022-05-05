@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton, ElMessage } from 'element-plus'
 
 import { useStore } from '@/store'
@@ -10,8 +10,6 @@ import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import CartNone from './components/cart-none/index.vue'
 
 import type { IListItem } from '@/store/modules/cart/types'
-
-const num = ref(1)
 
 const store = useStore()
 const getters = computed(() => store.getters)
@@ -43,12 +41,17 @@ const handleBatchRemoveGoods = async (isClearInvalidGoods: boolean) => {
       ElMessage.success(await store.dispatch('cart/batchRemoveGoods'))
     }
   }
-  
+
   if (getters.value['cart/invalidList'].length) {  
     if (isClearInvalidGoods) {
       ElMessage.success(await store.dispatch('cart/batchRemoveGoods', isClearInvalidGoods))
     }
   }
+}
+
+// 数量选择
+const handleInputNumber = (skuId: string, currentValue: number) => {
+  store.dispatch('cart/updateGoods', { skuId, count: currentValue})
 }
 </script>
 
@@ -91,7 +94,12 @@ const handleBatchRemoveGoods = async (isClearInvalidGoods: boolean) => {
                 <p v-if="item.price - item.nowPrice > 0">比加入时降价 <span class="red">&yen;{{ item.price - item.nowPrice }}</span></p>
               </td>
               <td class="tc">
-                <ElInputNumber :min="1" :model-value="item.count" />
+                <ElInputNumber 
+                  @change="(currentValue) => handleInputNumber(item.skuId, currentValue)"
+                  :min="1"
+                  :max="item.stock" 
+                  :model-value="item.count"
+                />
               </td>
               <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
