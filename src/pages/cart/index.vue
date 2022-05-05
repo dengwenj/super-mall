@@ -60,6 +60,10 @@ const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
   store.dispatch('cart/updateGoods', { skuId, count: currentValueOrEvent })
 }
 
+// 修改规格
+const updateCartSku = (oldSkuId: string, newSku: any) => {
+  store.dispatch('cart/updateCartSku', { oldSkuId, newSku })
+}
 </script>
 
 <template>
@@ -93,7 +97,7 @@ const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
                   <div>
                     <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
-                    <CartSku :skuId="item.skuId" :attrsText="item.attrsText" />
+                    <CartSku @change="e => updateCartSku(item.skuId, e)" :skuId="item.skuId" :attrsText="item.attrsText" />
                   </div>
                 </div>
               </td>

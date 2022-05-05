@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 import { getGoodsSku } from '@/services/api/cart'
 
 import GoodsSku from '@/pages/goods/components/goods-sku/index.vue'
+import WwButton from '@/components/lib/WwButton.vue'
 
 const props = defineProps<{
   attrsText: string
   skuId: string
+}>()
+const emit = defineEmits<{
+  (e: 'change', currSku: any): void
 }>()
 
 const isShowCartSku = ref(false)
 const cartSkuRef = ref()
 const goods = ref()
 const isLoading = ref(false)
+const currSku = ref()
 
 onClickOutside(cartSkuRef, () => {
   isShowCartSku.value = false
@@ -35,6 +40,20 @@ const handleClick = async () => {
 
   isShowCartSku.value = !isShowCartSku.value
 }
+
+// 选择SKU时候触发
+const changeSku = (sku: any) => {
+  currSku.value = sku
+}
+
+// 点击确认的时候，提交sku信息给购物车组件
+const submit = () => {
+  // 给购物车组件数据的前提：有sku信息，sku信息完整，sku中的skuId不能现有props.skuId一样
+  if (currSku.value && currSku.value.skuId && currSku.value.skuId !== props.skuId) {
+    emit('change', currSku.value)
+    isShowCartSku.value = false
+  }
+}
 </script>
 
 <template>
@@ -45,7 +64,8 @@ const handleClick = async () => {
     </div>
     <div class="layer" v-if="isShowCartSku">
       <div class="loading" v-if="isLoading">加载中...</div>
-      <GoodsSku v-else :goods="goods" :skuId="skuId" />
+      <GoodsSku @change="changeSku" v-else :goods="goods" :skuId="skuId" />
+      <WwButton @click="submit" v-if="goods" type="primary" size="mini" style="margin-left:60px">确认</WwButton>
     </div>
   </div>
 </template>

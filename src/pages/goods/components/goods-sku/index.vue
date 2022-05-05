@@ -181,6 +181,7 @@ const handleClick = (values: any[], val: Record<string, any>) => {
         height: 30px;
         line-height: 28px;
         padding: 0 20px;
+        margin-bottom: 7px;
         .sku-state-mixin ();
       }
     }
