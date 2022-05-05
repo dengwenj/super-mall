@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ElInputNumber, ElCheckbox } from 'element-plus'
+import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton } from 'element-plus'
 
 import { useStore } from '@/store'
 
 import GoodRelevant from '@/pages/goods/components/goods-relevant/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
-import { IListItem } from '@/store/modules/cart/types'
+import CartNone from './components/cart-none/index.vue'
+
+import type { IListItem } from '@/store/modules/cart/types'
 
 const num = ref(1)
 
@@ -24,7 +26,9 @@ const handleChange = (skuId: string, selected: boolean) => {
 
 // 是否全选
 const handleCheckAll = () => {
-  store.dispatch('cart/updateGoods', { selected: !getters.value['cart/isCheckAll'] })
+  if (getters.value['cart/validList'].length) {
+    store.dispatch('cart/updateGoods', { selected: !getters.value['cart/isCheckAll'] })
+  }
 }
 
 // 删除商品
@@ -53,6 +57,9 @@ const handleRemove = (skuId: string) => {
           </thead>
           <!-- 有效商品 -->
           <tbody>
+            <tr v-if="!getters['cart/validList'].length">
+              <td colspan="6"><CartNone /></td>
+            </tr>
             <tr v-for="item in getters['cart/validList']" :key="item.skuId">
               <td><ElCheckbox @change="handleChange(item.skuId, item.selected)" :model-value="item.selected" size="large" /></td>
               <td>
@@ -74,7 +81,19 @@ const handleRemove = (skuId: string) => {
               <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" @click="handleRemove(item.skuId)" href="javascript:;">删除</a></p>
+                <ElPopconfirm
+                  confirm-button-text="确定"
+                  cancel-button-text="取消"
+                  placement="bottom"
+                  title="确定删除吗？"
+                  :width="200"
+                  trigger="click"
+                  @confirm="handleRemove(item.skuId)"
+                >
+                  <template #reference>
+                    <p><a class="green" href="javascript:;">删除</a></p>
+                  </template>
+                </ElPopconfirm>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
