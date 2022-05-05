@@ -114,14 +114,12 @@ const cart: Module<ICartState, IStore> = {
         if (rootState.user.profile?.token) {
           if (Object.keys(payload).includes('skuId')) {
             await updateCartGoods(payload.skuId, { [Object.keys(payload)[1]]: payload[Object.keys(payload)[1]] })
-            commit('updateGoods', payload)
-            resolve('修改成功')
           } else {
             const allSkuIdList = state.list.map((item) => item.skuId)
             await allCheckSelected({ selected: payload.selected, ids: allSkuIdList })
-            commit('updateGoods', payload)
-            resolve('修改成功')
           }
+          commit('updateGoods', payload)
+          resolve('修改成功')
         } else {
           commit('updateGoods', payload)
           resolve('修改成功')
@@ -162,6 +160,15 @@ const cart: Module<ICartState, IStore> = {
     updateCartSku (ctx, { oldSkuId, newSku }) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.profile?.token) {
+          const oldGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
+          removeCartGoods({ ids: [oldSkuId] }).then(() => {
+            return addCartGoods({ skuId: newSku.skuId, count: oldGoods!.count })
+          }).then(() => {
+            return getCartList()
+          }).then((data) => {
+            ctx.commit('setList', data.result)
+            resolve('修改规格成功')
+          })
         } else {
           // 1. 获取旧的商品信息
           const oldGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
