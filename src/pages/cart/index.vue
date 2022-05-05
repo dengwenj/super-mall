@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton } from 'element-plus'
+import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton, ElMessage } from 'element-plus'
 
 import { useStore } from '@/store'
 
@@ -34,6 +34,14 @@ const handleCheckAll = () => {
 // 删除商品
 const handleRemove = (skuId: string) => {
  store.dispatch('cart/removeGoods', skuId)
+}
+
+// 批量删除商品
+const handleBatchRemoveGoods = async () => {
+  if (getters.value['cart/validList'].length) {
+    const GoodsSelectedWithFalseList = getters.value['cart/validList'].filter((item: IListItem) => !item.selected)
+    ElMessage.success(await store.dispatch('cart/batchRemoveGoods', GoodsSelectedWithFalseList))
+  }
 }
 </script>
 
@@ -127,7 +135,19 @@ const handleRemove = (skuId: string) => {
       <div class="action">
         <div class="batch">
           <ElCheckbox @change="handleCheckAll" :model-value="getters['cart/isCheckAll']" label="全选" size="large" />
-          <a href="javascript:;">删除商品</a>
+          <ElPopconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            placement="bottom"
+            title="确定批量删除吗？"
+            :width="200"
+            trigger="click"
+            @confirm="handleBatchRemoveGoods"
+          >
+            <template #reference>
+              <a href="javascript:;">删除商品</a>
+            </template>
+          </ElPopconfirm>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
         </div>

@@ -46,6 +46,10 @@ const cart: Module<ICartState, IStore> = {
         state.list.findIndex((item) => item.skuId === skuId),
         1
       )
+    },
+    // 批量删除
+    batchRemoveGoods(state, payload) {
+      state.list = payload
     }
   },
   actions: {
@@ -96,7 +100,19 @@ const cart: Module<ICartState, IStore> = {
           resolve('修改成功')
         }
       })
-    }
+    },
+    // 批量删除
+    batchRemoveGoods({ commit, rootState }, payload) {
+      return new Promise((resolve, reject) => {
+        if (rootState.user.profile?.token) {
+          
+        } else {
+          // 批量删除已选中的
+          commit('batchRemoveGoods', payload)
+          resolve('批量删除成功')
+        }
+      })
+    } 
   },
   getters: {
     // 符合的列表
