@@ -126,11 +126,11 @@ const cart: Module<ICartState, IStore> = {
     },
     // 符合列表的总件数
     validTotal(state, getters) {
-      return getters.validList.reduce((pre: number, item: IListItem) => pre + item.count, 0)
+      return getters.validList.reduce((pre: number, item: IListItem) => pre + Number(item.count), 0)
     },
     // 符合列表的总金额
     validAllPrice(state, getters) {
-      return getters.validList.reduce((pre: number, item: IListItem) => pre + (item.nowPrice as any * item.count), 0).toFixed(2)
+      return getters.validList.reduce((pre: number, item: IListItem) => pre + (item.nowPrice as any * Number(item.count)), 0).toFixed(2)
     },
     // 无效商品列表
     invalidList(state) {
@@ -142,11 +142,11 @@ const cart: Module<ICartState, IStore> = {
     },
     // 已选商品总件数
     selectedTotal(state, getters) {
-      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + item.count, 0)
+      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + Number(item.count), 0)
     },
     // 已选商品总金额
     selectedAllPrice(state, getters) {
-      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + item.count * (item.nowPrice as any), 0).toFixed(2)
+      return getters.selectedList.reduce((pre: number, item: IListItem) => pre + Number(item.count) * (item.nowPrice as any), 0).toFixed(2)
     },
     // 是否全选
     isCheckAll(state, getters) {

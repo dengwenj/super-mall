@@ -50,9 +50,15 @@ const handleBatchRemoveGoods = async (isClearInvalidGoods: boolean) => {
 }
 
 // 数量选择
-const handleInputNumber = (skuId: string, currentValue: number) => {
-  store.dispatch('cart/updateGoods', { skuId, count: currentValue})
+const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
+  if (currentValueOrEvent?.target?.value) {
+    store.dispatch('cart/updateGoods', { skuId, count: currentValueOrEvent.target.value})
+    return
+  }
+
+  store.dispatch('cart/updateGoods', { skuId, count: currentValueOrEvent })
 }
+
 </script>
 
 <template>
@@ -99,6 +105,7 @@ const handleInputNumber = (skuId: string, currentValue: number) => {
                   :min="1"
                   :max="item.stock" 
                   :model-value="item.count"
+                  @blur="(e) => handleInputNumber(item.skuId, e)"
                 />
               </td>
               <td class="tc"><p class="f16 red">&yen;{{ item.nowPrice }}</p></td>
