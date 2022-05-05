@@ -37,10 +37,17 @@ const handleRemove = (skuId: string) => {
 }
 
 // 批量删除商品
-const handleBatchRemoveGoods = async () => {
+const handleBatchRemoveGoods = async (isClearInvalidGoods: boolean) => {
   if (getters.value['cart/validList'].length) {
-    const GoodsSelectedWithFalseList = getters.value['cart/validList'].filter((item: IListItem) => !item.selected)
-    ElMessage.success(await store.dispatch('cart/batchRemoveGoods', GoodsSelectedWithFalseList))
+    if (!isClearInvalidGoods) {
+      ElMessage.success(await store.dispatch('cart/batchRemoveGoods'))
+    }
+  }
+  
+  if (getters.value['cart/invalidList'].length) {  
+    if (isClearInvalidGoods) {
+      ElMessage.success(await store.dispatch('cart/batchRemoveGoods', isClearInvalidGoods))
+    }
   }
 }
 </script>
@@ -139,17 +146,29 @@ const handleBatchRemoveGoods = async () => {
             confirm-button-text="确定"
             cancel-button-text="取消"
             placement="bottom"
-            title="确定批量删除吗？"
+            title="确定删除选中的商品吗？"
             :width="200"
             trigger="click"
-            @confirm="handleBatchRemoveGoods"
+            @confirm="handleBatchRemoveGoods(false)"
           >
             <template #reference>
               <a href="javascript:;">删除商品</a>
             </template>
           </ElPopconfirm>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <ElPopconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            placement="bottom"
+            title="确定清空失效的商品吗？"
+            :width="200"
+            trigger="click"
+            @confirm="handleBatchRemoveGoods(true)"
+          >
+            <template #reference>
+              <a href="javascript:;">清空失效商品</a>
+            </template>
+          </ElPopconfirm>
         </div>
         <div class="total">
           共 {{ getters['cart/validTotal'] }} 件商品，已选择 {{ getters['cart/selectedTotal'] }} 件，商品合计：

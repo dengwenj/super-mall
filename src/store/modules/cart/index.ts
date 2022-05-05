@@ -102,14 +102,19 @@ const cart: Module<ICartState, IStore> = {
       })
     },
     // 批量删除
-    batchRemoveGoods({ commit, rootState }, payload) {
+    batchRemoveGoods({ commit, rootState, getters }, isClearInvalidGoods: boolean) {
       return new Promise((resolve, reject) => {
         if (rootState.user.profile?.token) {
           
         } else {
           // 批量删除已选中的
-          commit('batchRemoveGoods', payload)
-          resolve('批量删除成功')
+          if (!isClearInvalidGoods) {
+            const GoodsSelectedWithFalseList = getters.validList.filter((item: IListItem) => !item.selected)
+            commit('batchRemoveGoods', GoodsSelectedWithFalseList)
+          } else {
+            commit('batchRemoveGoods', getters.validList)
+          }
+          resolve('批量删除成功') 
         }
       })
     } 
