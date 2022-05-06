@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { reactive, ref, defineProps, defineEmits } from 'vue'
+import { reactive, ref, defineProps, defineEmits, nextTick } from 'vue'
 import { ElDialog, ElButton, ElForm, ElFormItem, ElInput, FormRules, ElMessage } from 'element-plus'
 
-import { addAddress } from '@/services/api/address-api'
+import { addAddress, getAddress } from '@/services/api/address-api'
 
 import WwCity from '@/components/lib/WwCity.vue'
 
@@ -14,6 +14,7 @@ defineProps<{
 }>()
 const emits = defineEmits<{
   (e: 'update:dialogAddressVisible', prop: boolean): void
+  (e: 'getAddressList', prop: IAddAddressF[]): void
 }>()
 
 const formLabelWidth = '140px'
@@ -77,13 +78,16 @@ const handleClickOk = async () => {
     if (isValid) {
       // 验证成功发送请求
       try {
-        const res = await addAddress({
+        await addAddress({
           ...codeObj.value,
           ...form,
           fullLocation: fullLocation.value!,
           isDefault: 0
         })
-        console.log(res)
+
+        // 获取收货地址列表
+        const res = await getAddress()
+        emits('getAddressList', res.result)
       } catch (error: any) {
         ElMessage.error(error.response.data)
       }

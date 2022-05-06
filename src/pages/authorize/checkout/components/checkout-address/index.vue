@@ -1,26 +1,37 @@
 <script setup lang="ts">
-import { defineProps, ref, withDefaults } from 'vue'
+import {ref, onMounted, watchEffect } from 'vue'
+
+import { getAddress } from '@/services/api/address-api'
 
 import WwButton from '@/components/lib/WwButton.vue'
 import HandleAddress from '../handle-address/index.vue'
 
-const props = withDefaults(defineProps<{
-  userAddresses: any[]
-}>(), {
-  userAddresses: () => []
+import type { IAddAddressF } from '@/services/api/address-api'
+
+const showAddress = ref<IAddAddressF | null>(null)
+const dialogAddressVisible = ref(false)
+const addressList = ref<IAddAddressF[]>([])
+
+watchEffect(() => {
+  // 默认地址，没有默认地址就用第一条地址，或没有收货地址
+  if (addressList.value.length) {
+    const defaultAddress = addressList.value.find((item) => item.isDefault === 0)
+    if (defaultAddress) {
+      showAddress.value = defaultAddress
+    } else {
+      showAddress.value = addressList.value[0]
+    }
+  }
 })
 
-const showAddress = ref(null)
-const dialogAddressVisible = ref(false)
+onMounted(async () => {
+  // 获取收货地址列表
+  const res = await getAddress()
+  addressList.value = res.result
+})
 
-// 默认地址，没有默认地址就用第一条地址，或没有收货地址
-if (props.userAddresses.length) {
-  const defaultAddress = props.userAddresses.find((item) => item.isDefault === 0)
-  if (defaultAddress) {
-    showAddress.value = defaultAddress
-  } else {
-    showAddress.value = props.userAddresses[0]
-  }
+const handleAddressList = (list: IAddAddressF[]) => {
+  addressList.value = list
 }
 </script>
 
@@ -45,7 +56,10 @@ if (props.userAddresses.length) {
       </div>
     </div>
     <!-- 是否显示对话框 -->
-    <HandleAddress v-model:dialogAddressVisible="dialogAddressVisible" />
+    <HandleAddress 
+      v-model:dialogAddressVisible="dialogAddressVisible"
+      @getAddressList="handleAddressList"
+    />
   </div>
 </template>
 

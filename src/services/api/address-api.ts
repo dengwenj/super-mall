@@ -20,3 +20,10 @@ export const addAddress = (data: IAddAddressF) => {
     data
   })
 }
+
+export const getAddress = () => {
+  return request({
+    method: 'GET',
+    url: '/member/address'
+  })
+}
