@@ -9,16 +9,23 @@ import WwCity from '@/components/lib/WwCity.vue'
 import type { IAddAddressF } from '@/services/api/address-api'
 import type { ICodeMap } from './types'
 
-defineProps<{
-  dialogAddressVisible: boolean
+const props = defineProps<{
+  dialogAddressVisible: {
+    add: boolean
+    toggle: boolean
+  },
+  addressList: any[]
 }>()
 const emits = defineEmits<{
-  (e: 'update:dialogAddressVisible', prop: boolean): void
+  (e: 'update:dialogAddressVisible', prop: {
+    add: boolean
+    toggle: boolean
+  }): void
   (e: 'getAddressList', prop: IAddAddressF[]): void
+  (e: 'newShowAddress', prop: any): void
 }>()
 
 const formLabelWidth = '140px'
-const dialogFormVisible = ref(false)
 const elFormRef = ref<InstanceType<typeof ElForm>>()
 const codeObj = ref<ICodeMap | null>(null)
 const fullLocation = ref<string | null>(null)
@@ -29,6 +36,8 @@ const form = reactive<IAddAddressF>({
   postalCode: '',
   addressTags: ''
 })
+const clickId = ref<null | number>(null)
+const newAddress = ref()
 
 const phone = (rule: any, value: any, callback: any) => {
   const phoneR = /^1[3456789]\d{9}$/
@@ -64,51 +73,80 @@ const rules = reactive<FormRules>({
 })
 
 const handleClickClose = () => {
-  emits('update:dialogAddressVisible', false)
+  emits(
+    'update:dialogAddressVisible', 
+    props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+  )
 }
 
 const handleClickOk = async () => {
-  if (!codeObj.value) {
-    return ElMessage.warning('请选择地区')
+  // 点击确定走添加逻辑
+  if (!props.dialogAddressVisible.toggle) {
+    if (!codeObj.value) {
+      return ElMessage.warning('请选择地区')
+    }
+
+    emits(
+      'update:dialogAddressVisible',
+      props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+    )
+
+    elFormRef.value?.validate(async (isValid) => {
+      if (isValid) {
+        // 验证成功发送请求
+        try {
+          await addAddress({
+            ...codeObj.value,
+            ...form,
+            fullLocation: fullLocation.value!,
+            isDefault: 0
+          })
+          ElMessage.success('添加地址成功~')
+
+          // 获取收货地址列表
+          const res = await getAddress()
+          emits('getAddressList', res.result)
+        } catch (error: any) {
+          ElMessage.error(error.response.data)
+        }
+      }
+    })
+    return
   }
 
-  emits('update:dialogAddressVisible', false)
-
-  elFormRef.value?.validate(async (isValid) => {
-    if (isValid) {
-      // 验证成功发送请求
-      try {
-        await addAddress({
-          ...codeObj.value,
-          ...form,
-          fullLocation: fullLocation.value!,
-          isDefault: 0
-        })
-
-        // 获取收货地址列表
-        const res = await getAddress()
-        emits('getAddressList', res.result)
-      } catch (error: any) {
-        ElMessage.error(error.response.data)
-      }
-    }
-  })
+  // 点击确定走切换逻辑
+  emits(
+    'update:dialogAddressVisible',
+    props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+  )
+  // 切换过后新的地址
+  emits('newShowAddress', newAddress)
+  ElMessage.success('切换地址成功~')
 }
 
 const handleGetCode = (codeMap: ICodeMap, address: string) => {
   codeObj.value = codeMap
   fullLocation.value = address
 }
+
+const hanleClickItem = (id: number) => {
+  clickId.value = id
+
+  const showAddress = props.addressList.find((item) => item.id === id)
+  newAddress.value = showAddress
+}
 </script>
 
 <template>
   <el-dialog 
     @close="handleClickClose" 
-    v-model="dialogAddressVisible" 
+    v-model="dialogAddressVisible.add" 
     title="Shipping address"
     :width="600"
+    class="dialog"
   >
-    <ElForm 
+    <ElForm
+      v-if="!dialogAddressVisible.toggle"
       ref="elFormRef"
       :model="form"
       :rules="rules"
@@ -132,6 +170,21 @@ const handleGetCode = (codeMap: ICodeMap, address: string) => {
         <ElInput v-model="form.addressTags" placeholder="请输入地址标签,以英文的逗号分隔" />
       </ElFormItem>
     </ElForm>
+    <div v-else>
+      <div 
+        @click="hanleClickItem(item.id)" 
+        class="text item" 
+        v-for="(item) in addressList" 
+        :key="item.id"
+        :class="clickId === item.id ? 'active' : ''"
+      >
+        <ul>
+         <li><span>收<i/>货<i/>人：</span>{{item.receiver}}</li>
+         <li><span>联系方式：</span>{{item.contact}}</li>
+         <li><span>收货地址：</span>{{item.fullLocation.replace(/ /g,'')+item.address}}</li>
+       </ul>
+     </div>
+    </div>
     <template #footer>
       <span class="dialog-footer">
         <ElButton @click="handleClickClose">取消</ElButton>
@@ -141,7 +194,7 @@ const handleGetCode = (codeMap: ICodeMap, address: string) => {
   </el-dialog>
 </template>
 
-<style scoped>
+<style scoped lang="less">
   .el-button--text {
     margin-right: 15px;
   }
@@ -153,5 +206,26 @@ const handleGetCode = (codeMap: ICodeMap, address: string) => {
   }
   .dialog-footer button:first-child {
     margin-right: 10px;
+  }
+
+  .text {
+    flex: 1;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    &.item {
+      border: 1px solid #f5f5f5;
+      margin-bottom: 10px;
+      cursor: pointer;
+      &.active,&:hover {
+        border-color: @themeColor;
+        background: lighten(@themeColor,50%);
+      }
+      > ul {
+        padding: 10px;
+        font-size: 14px;
+        line-height: 30px;
+      }
+    }
   }
 </style>

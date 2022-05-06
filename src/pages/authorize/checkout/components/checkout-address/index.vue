@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted, watchEffect, reactive } from 'vue'
 
 import { getAddress } from '@/services/api/address-api'
 
@@ -9,7 +9,10 @@ import HandleAddress from '../handle-address/index.vue'
 import type { IAddAddressF } from '@/services/api/address-api'
 
 const showAddress = ref<IAddAddressF | null>(null)
-const dialogAddressVisible = ref(false)
+const dialogAddressVisible = ref({
+  add: false,
+  toggle: false
+})
 const addressList = ref<IAddAddressF[]>([])
 
 watchEffect(() => {
@@ -33,13 +36,34 @@ onMounted(async () => {
 const handleAddressList = (list: IAddAddressF[]) => {
   addressList.value = list
 }
+
+// 切换地址
+const handleToggleAddress = () => {
+  dialogAddressVisible.value = {
+    add: true,
+    toggle: true
+  }
+}
+
+// 点击添加
+const handleAddress = () => {
+  dialogAddressVisible.value = {
+    add: true,
+    toggle: false
+  }
+}
+
+// 切换过后显示新的地址
+const handleNewShowAddress = (newAddress: any) => {
+  showAddress.value = newAddress.value
+}
 </script>
 
 <template>
   <div class="checkout-address">
     <div v-if="!showAddress" class="none">
       <span>需要先添加收货地址才可以提交订单</span>
-      <WwButton @click="dialogAddressVisible = true" type="plain" class="btn">添加地址</WwButton>
+      <WwButton @click="dialogAddressVisible.add = true" type="plain" class="btn">添加地址</WwButton>
     </div>
     <div v-else class="df">
       <div class="text">
@@ -51,14 +75,16 @@ const handleAddressList = (list: IAddAddressF[]) => {
         <a href="javascript:;">修改地址</a>
       </div>
       <div class="action">
-        <WwButton type="plain" class="btn">切换地址</WwButton>
-        <WwButton @click="dialogAddressVisible = true" type="plain" class="btn">添加地址</WwButton>
+        <WwButton type="plain" class="btn" @click="handleToggleAddress">切换地址</WwButton>
+        <WwButton @click="handleAddress" type="plain" class="btn">添加地址</WwButton>
       </div>
     </div>
     <!-- 是否显示对话框 -->
     <HandleAddress 
       v-model:dialogAddressVisible="dialogAddressVisible"
       @getAddressList="handleAddressList"
+      @newShowAddress="handleNewShowAddress"
+      :addressList="addressList"
     />
   </div>
 </template>
