@@ -34,13 +34,13 @@ onMounted(async () => {
 
 <template>
   <div class="xtx-pay-checkout-page">
-    <div class="container">
+    <div class="container" v-if="order">
       <Breadcrumb :breadcrumb="breadcrumb" />
       <div class="wrapper">
         <!-- 收货地址 -->
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
-          <CheckoutAddress />
+          <CheckoutAddress :userAddresses="order.userAddresses" />
         </div>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
@@ -56,7 +56,7 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in order?.goods" :key="item.skuId">
+              <tr v-for="item in order.goods" :key="item.skuId">
                 <td>
                   <a @click="router.push(`/product/${item.id}`)" href="javascript:;" class="info">
                     <img :src="item.picture" alt="">
@@ -78,10 +78,10 @@ onMounted(async () => {
         <h3 class="box-title">金额明细</h3>
         <div class="box-body">
           <div class="total">
-            <dl><dt>商品件数：</dt><dd>{{ order?.summary.goodsCount }}件</dd></dl>
-            <dl><dt>商品总价：</dt><dd>¥{{ order?.summary.totalPrice.toFixed(2) }}</dd></dl>
-            <dl><dt>运<i></i>费：</dt><dd>¥{{ order?.summary.postFee.toFixed(2) }}</dd></dl>
-            <dl><dt>应付总额：</dt><dd class="price">¥{{ order?.summary.totalPayPrice.toFixed(2) }}</dd></dl>
+            <dl><dt>商品件数：</dt><dd>{{ order.summary.goodsCount }}件</dd></dl>
+            <dl><dt>商品总价：</dt><dd>¥{{ order.summary.totalPrice.toFixed(2) }}</dd></dl>
+            <dl><dt>运<i></i>费：</dt><dd>¥{{ order.summary.postFee.toFixed(2) }}</dd></dl>
+            <dl><dt>应付总额：</dt><dd class="price">¥{{ order.summary.totalPayPrice.toFixed(2) }}</dd></dl>
           </div>
         </div>
         <!-- 提交订单 -->

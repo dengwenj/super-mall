@@ -1,17 +1,37 @@
 <script setup lang="ts">
+import { defineProps, ref, withDefaults } from 'vue'
+
 import WwButton from '@/components/lib/WwButton.vue'
+
+const props = withDefaults(defineProps<{
+  userAddresses: any[]
+}>(), {
+  userAddresses: () => []
+})
+
+const showAddress = ref(null)
+
+// 默认地址，没有默认地址就用第一条地址，或没有收货地址
+if (props.userAddresses.length) {
+  const defaultAddress = props.userAddresses.find((item) => item.isDefault === 0)
+  if (defaultAddress) {
+    showAddress.value = defaultAddress
+  } else {
+    showAddress.value = props.userAddresses[0]
+  }
+}
 </script>
 
 <template>
   <div class="checkout-address">
     <div class="text">
-      <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
-      <ul>
-        <li><span>收<i/>货<i/>人：</span>朱超</li>
-        <li><span>联系方式：</span>132****2222</li>
-        <li><span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室</li>
+      <div v-if="!showAddress" class="none">需要先添加收货地址才可以提交订单</div>
+      <ul v-if="showAddress">
+        <li><span>收<i/>货<i/>人：</span>{{ showAddress.receiver }}</li>
+        <li><span>联系方式：</span>{{ showAddress.contact.slice(0, 3) + '****' + showAddress.contact.slice(7) }}</li>
+        <li><span>收货地址：</span>{{ showAddress.fullLocation + showAddress.address }}</li>
       </ul>
-      <a href="javascript:;">修改地址</a>
+      <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
       <WwButton class="btn">切换地址</WwButton>
