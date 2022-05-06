@@ -24,18 +24,23 @@ if (props.userAddresses.length) {
 
 <template>
   <div class="checkout-address">
-    <div class="text">
-      <div v-if="!showAddress" class="none">需要先添加收货地址才可以提交订单</div>
-      <ul v-if="showAddress">
-        <li><span>收<i/>货<i/>人：</span>{{ showAddress.receiver }}</li>
-        <li><span>联系方式：</span>{{ showAddress.contact.slice(0, 3) + '****' + showAddress.contact.slice(7) }}</li>
-        <li><span>收货地址：</span>{{ showAddress.fullLocation + showAddress.address }}</li>
-      </ul>
-      <a v-if="showAddress" href="javascript:;">修改地址</a>
+    <div v-if="!showAddress" class="none">
+      <span>需要先添加收货地址才可以提交订单</span>
+      <WwButton type="plain" class="btn">添加地址</WwButton>
     </div>
-    <div class="action">
-      <WwButton class="btn">切换地址</WwButton>
-      <WwButton class="btn">添加地址</WwButton>
+    <div v-else class="df">
+      <div class="text">
+        <ul>
+          <li><span>收<i/>货<i/>人：</span>{{ showAddress?.receiver }}</li>
+          <li><span>联系方式：</span>{{ showAddress?.contact.slice(0, 3) + '****' + showAddress?.contact.slice(7) }}</li>
+          <li><span>收货地址：</span>{{ showAddress?.fullLocation + showAddress?.address }}</li>
+        </ul>
+        <a href="javascript:;">修改地址</a>
+      </div>
+      <div class="action">
+        <WwButton type="plain" class="btn">切换地址</WwButton>
+        <WwButton type="plain" class="btn">添加地址</WwButton>
+      </div>
     </div>
   </div>
 </template>
@@ -43,108 +48,60 @@ if (props.userAddresses.length) {
 <style scoped lang="less">
 .checkout-address {
   border: 1px solid #f5f5f5;
-  display: flex;
-  align-items: center;
-  .text {
-    flex: 1;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    .none {
-      line-height: 90px;
-      color: #999;
-      text-align: center;
-      width: 100%;
+  .none {
+    line-height: 90px;
+    color: #999;
+    text-align: center;
+    width: 100%;
+    span {
+      margin-right: 100px;
     }
-    > ul {
+  }
+  .df {
+    display: flex;
+    .text {
       flex: 1;
-      padding: 20px;
-      li {
-        line-height: 30px;
-        span {
-          color: #999;
-          margin-right: 5px;
-          > i {
-            width: 0.5em;
-            display: inline-block;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      > ul {
+        flex: 1;
+        padding: 20px;
+        li {
+          line-height: 30px;
+          span {
+            color: #999;
+            margin-right: 5px;
+            > i {
+              width: 0.5em;
+              display: inline-block;
+            }
           }
         }
       }
-    }
-    > a {
-      color: @themeColor;
-      width: 160px;
-      text-align: center;
-      height: 90px;
-      line-height: 90px;
-      border-right: 1px solid #f5f5f5;
-    }
-  }
-  .action {
-    width: 420px;
-    text-align: center;
-    .btn {
-      width: 140px;
-      height: 46px;
-      line-height: 44px;
-      font-size: 14px;
-      &:first-child {
-        margin-right: 10px;
+      > a {
+        color: @themeColor;
+        width: 160px;
+        text-align: center;
+        height: 90px;
+        line-height: 90px;
+        border-right: 1px solid #f5f5f5;
       }
     }
-  }
-}
-</style>
-<style scoped lang="less">
-.checkout-address {
-  border: 1px solid #f5f5f5;
-  display: flex;
-  align-items: center;
-  .text {
-    flex: 1;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    .none {
-      line-height: 90px;
-      color: #999;
+    .action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 420px;
       text-align: center;
-      width: 100%;
-    }
-    > ul {
-      flex: 1;
-      padding: 20px;
-      li {
-        line-height: 30px;
-        span {
-          color: #999;
-          margin-right: 5px;
-          > i {
-            width: 0.5em;
-            display: inline-block;
-          }
+      .btn {
+        width: 140px;
+        height: 46px;
+        line-height: 44px;
+        font-size: 14px;
+        &:first-child {
+          margin-right: 10px;
         }
-      }
-    }
-    > a {
-      color: @themeColor;
-      width: 160px;
-      text-align: center;
-      height: 90px;
-      line-height: 90px;
-      border-right: 1px solid #f5f5f5;
-    }
-  }
-  .action {
-    width: 420px;
-    text-align: center;
-    .btn {
-      width: 140px;
-      height: 46px;
-      line-height: 44px;
-      font-size: 14px;
-      &:first-child {
-        margin-right: 10px;
       }
     }
   }
