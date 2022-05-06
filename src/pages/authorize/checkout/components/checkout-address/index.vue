@@ -2,6 +2,7 @@
 import { defineProps, ref, withDefaults } from 'vue'
 
 import WwButton from '@/components/lib/WwButton.vue'
+import HandleAddress from '../handle-address/index.vue'
 
 const props = withDefaults(defineProps<{
   userAddresses: any[]
@@ -10,6 +11,7 @@ const props = withDefaults(defineProps<{
 })
 
 const showAddress = ref(null)
+const dialogAddressVisible = ref(false)
 
 // 默认地址，没有默认地址就用第一条地址，或没有收货地址
 if (props.userAddresses.length) {
@@ -26,7 +28,7 @@ if (props.userAddresses.length) {
   <div class="checkout-address">
     <div v-if="!showAddress" class="none">
       <span>需要先添加收货地址才可以提交订单</span>
-      <WwButton type="plain" class="btn">添加地址</WwButton>
+      <WwButton @click="dialogAddressVisible = true" type="plain" class="btn">添加地址</WwButton>
     </div>
     <div v-else class="df">
       <div class="text">
@@ -39,9 +41,11 @@ if (props.userAddresses.length) {
       </div>
       <div class="action">
         <WwButton type="plain" class="btn">切换地址</WwButton>
-        <WwButton type="plain" class="btn">添加地址</WwButton>
+        <WwButton @click="dialogAddressVisible = true" type="plain" class="btn">添加地址</WwButton>
       </div>
     </div>
+    <!-- 是否显示对话框 -->
+    <HandleAddress v-model:dialogAddressVisible="dialogAddressVisible" />
   </div>
 </template>
 

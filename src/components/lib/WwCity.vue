@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, defineProps, withDefaults, defineEmits } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import axios from 'axios'
+
+withDefaults(defineProps<{
+  width: number
+}>(), {
+  width: 0
+})
+
+const emits = defineEmits<{
+  (e: 'getCode', codeMap: { provinceCode: string, cityCode: string, countyCode: string }, address: string): void
+}>()
 
 const isShow = ref(false)
 const cityRef = ref()
@@ -46,13 +56,18 @@ const handleCityName = (code: string) => {
 
   if (!cityItem.areaList) {
     isShow.value = false
+    emits('getCode', {
+      provinceCode: address[0].code,
+      cityCode: address[1].code,
+      countyCode: address[2].code
+    }, address[0].name + address[1].name + address[2].name)
   }
 }
 </script>
 
 <template>
   <div class="xtx-city" ref="cityRef">
-    <div class="select" @click="handleClickCity" :class="isShow ? 'active' : ''">
+    <div class="select" :style="{ width: width ? width + 'px' : '130px' }" @click="handleClickCity" :class="isShow ? 'active' : ''">
       <span class="placeholder">
         <template v-if="!address.length">
           请选择配送地址
