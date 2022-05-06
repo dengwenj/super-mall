@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { createOrder } from '@/services/api/order'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
+import CheckoutAddress from './components/checkout-address/index.vue'
 
+const order = ref()
+
+const router = useRouter()
 
 const breadcrumb = computed(() => [
   {
@@ -18,6 +25,11 @@ const breadcrumb = computed(() => [
     name: '填写订单',
   }
 ])
+
+onMounted(async () => {
+  const res = await createOrder()
+  order.value = res.result
+})
 </script>
 
 <template>
@@ -28,21 +40,7 @@ const breadcrumb = computed(() => [
         <!-- 收货地址 -->
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
-          <div class="address">
-            <div class="text">
-              <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
-              <ul>
-                <li><span>收<i/>货<i/>人：</span>朱超</li>
-                <li><span>联系方式：</span>132****2222</li>
-                <li><span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室</li>
-              </ul>
-              <a href="javascript:;">修改地址</a>
-            </div>
-            <div class="action">
-              <WwButton class="btn">切换地址</WwButton>
-              <WwButton class="btn">添加地址</WwButton>
-            </div>
-          </div>
+          <CheckoutAddress />
         </div>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
@@ -58,51 +56,37 @@ const breadcrumb = computed(() => [
               </tr>
             </thead>
             <tbody>
-              <tr v-for="i in 4" :key="i">
+              <tr v-for="item in order?.goods" :key="item.skuId">
                 <td>
-                  <a href="javascript:;" class="info">
-                    <img src="https://yanxuan-item.nosdn.127.net/cd9b2550cde8bdf98c9d083d807474ce.png" alt="">
+                  <a @click="router.push(`/product/${item.id}`)" href="javascript:;" class="info">
+                    <img :src="item.picture" alt="">
                     <div class="right">
-                      <p>轻巧多用锅雪平锅 麦饭石不粘小奶锅煮锅</p>
-                      <p>颜色：白色 尺寸：10cm 产地：日本</p>
+                      <p>{{ item.name }}</p>
+                      <p>{{ item.attrsText }}</p>
                     </div>
                   </a>
                 </td>
-                <td>&yen;100.00</td>
-                <td>2</td>
-                <td>&yen;200.00</td>
-                <td>&yen;200.00</td>
+                <td>&yen;{{ item.price }}</td>
+                <td>{{ item.count }}</td>
+                <td>&yen;{{ item.totalPrice }}</td>
+                <td>&yen;{{ item.totalPayPrice }}</td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <!-- 配送时间 -->
-        <h3 class="box-title">配送时间</h3>
-        <div class="box-body">
-          <a class="my-btn active" href="javascript:;">不限送货时间：周一至周日</a>
-          <a class="my-btn" href="javascript:;">工作日送货：周一至周五</a>
-          <a class="my-btn" href="javascript:;">双休日、假日送货：周六至周日</a>
-        </div>
-        <!-- 支付方式 -->
-         <h3 class="box-title">支付方式</h3>
-        <div class="box-body">
-          <a class="my-btn active" href="javascript:;">在线支付</a>
-          <a class="my-btn" href="javascript:;">货到付款</a>
-          <span style="color:#999">货到付款需付5元手续费</span>
         </div>
         <!-- 金额明细 -->
         <h3 class="box-title">金额明细</h3>
         <div class="box-body">
           <div class="total">
-            <dl><dt>商品件数：</dt><dd>5件</dd></dl>
-            <dl><dt>商品总价：</dt><dd>¥5697.00</dd></dl>
-            <dl><dt>运<i></i>费：</dt><dd>¥0.00</dd></dl>
-            <dl><dt>应付总额：</dt><dd class="price">¥5697.00</dd></dl>
+            <dl><dt>商品件数：</dt><dd>{{ order?.summary.goodsCount }}件</dd></dl>
+            <dl><dt>商品总价：</dt><dd>¥{{ order?.summary.totalPrice.toFixed(2) }}</dd></dl>
+            <dl><dt>运<i></i>费：</dt><dd>¥{{ order?.summary.postFee.toFixed(2) }}</dd></dl>
+            <dl><dt>应付总额：</dt><dd class="price">¥{{ order?.summary.totalPayPrice.toFixed(2) }}</dd></dl>
           </div>
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <XtxButton type="primary">提交订单</XtxButton>
+          <WwButton type="primary">提交订单</WwButton>
         </div>
       </div>
     </div>
@@ -123,59 +107,6 @@ const breadcrumb = computed(() => [
     }
     .box-body {
       padding: 20px 0;
-    }
-  }
-}
-.address {
-  border: 1px solid #f5f5f5;
-  display: flex;
-  align-items: center;
-  .text {
-    flex: 1;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    .none {
-      line-height: 90px;
-      color: #999;
-      text-align: center;
-      width: 100%;  
-    }
-    > ul {
-      flex: 1;
-      padding: 20px;
-      li {
-        line-height: 30px;
-        span {
-          color: #999;
-          margin-right: 5px;
-          > i {
-            width: 0.5em;
-            display: inline-block;
-          }
-        }
-      }
-    }
-    > a {
-      color: @themeColor;
-      width: 160px;
-      text-align: center;
-      height: 90px;
-      line-height: 90px;
-      border-right: 1px solid #f5f5f5;
-    }
-  }
-  .action {
-    width: 420px;
-    text-align: center;
-    .btn {
-      width: 140px;
-      height: 46px;
-      line-height: 44px;
-      font-size: 14px;
-      &:first-child {
-        margin-right: 10px;
-      }
     }
   }
 }
