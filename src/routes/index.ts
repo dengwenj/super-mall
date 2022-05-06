@@ -12,6 +12,7 @@ const Product = () => import('@/pages/goods/index.vue')
 const Login = () => import('@/pages/login/index.vue')
 const CallBack = () => import('@/pages/login/callback.vue')
 const Cart = () => import('@/pages/cart/index.vue')
+const Checkout = () => import('@/pages/authorize/checkout/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,6 +38,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/cart',
         component: Cart
+      },
+      {
+        path: '/authorize/checkout',
+        component: Checkout
       }
     ]
   },
@@ -62,10 +67,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  if (to.path.startsWith('/authorize')) {
-    if (!store.state.user.profile?.token) {
-      return `/login?redirectUrl=${encodeURIComponent(to.fullPath)}`
-    }
+  if (to.path.startsWith('/authorize') && !store.state.user.profile?.token) {
+    return `/login?redirectUrl=${encodeURIComponent(to.fullPath)}`
   }
 })
 

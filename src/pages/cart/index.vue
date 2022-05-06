@@ -86,10 +86,15 @@ const handleCheckOut = () => {
     )
       .then(() => {
         // 点击确定要做的事
-        router.push('/authorize/settlement')
+        router.push('/authorize/checkout')
       })
       .catch(() => {})
-    }
+    
+    return
+  }
+
+  // 有登陆直接跳转
+  router.push('/authorize/checkout')
 }
 </script>
 
