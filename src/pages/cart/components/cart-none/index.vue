@@ -8,7 +8,7 @@ import WwButton from '@/components/lib/WwButton.vue'
   <div class="cart-none">
     <el-empty description="购物车内还没加入商品喔~" />
     <div class="btn">
-      <WwButton type="primary" @click="$router.push('/')">继续逛逛</WwButton>
+      <WwButton type="primary" @click="$router.push('/')">随便逛逛</WwButton>
     </div>
   </div>
 </template>

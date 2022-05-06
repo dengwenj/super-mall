@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+import store from '@/store'
+
 import type { RouteRecordRaw } from 'vue-router'
 
 const Layout = () => import('@/pages/layout/index.vue')
@@ -55,6 +57,14 @@ const router = createRouter({
     return {
       left: 0,
       top: 0
+    }
+  }
+})
+
+router.beforeEach((to, from) => {
+  if (to.path.startsWith('/authorize')) {
+    if (!store.state.user.profile?.token) {
+      return `/login?redirectUrl=${encodeURIComponent(to.fullPath)}`
     }
   }
 })

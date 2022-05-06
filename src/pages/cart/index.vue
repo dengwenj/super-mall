@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton, ElMessage } from 'element-plus'
+import { ElInputNumber, ElCheckbox, ElPopconfirm, ElButton, ElMessage, ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 import { useStore } from '@/store'
 
@@ -12,6 +13,7 @@ import CartSku from './components/cart-sku/index.vue'
 
 import type { IListItem } from '@/store/modules/cart/types'
 
+const router = useRouter()
 const store = useStore()
 const getters = computed(() => store.getters)
 
@@ -63,6 +65,31 @@ const handleInputNumber = (skuId: string, currentValueOrEvent: any) => {
 // 修改规格
 const updateCartSku = (oldSkuId: string, newSku: any) => {
   store.dispatch('cart/updateCartSku', { oldSkuId, newSku })
+}
+
+// 点击下单
+const handleCheckOut = () => {
+  if (!store.getters['cart/selectedList'].length) {
+    return ElMessage.warning('您还没有勾选要下单的商品~')
+  }
+
+  // 没有登录，弹出层
+  if (!store.state.user.profile?.token) {
+    ElMessageBox.confirm(
+      '下单结算需要登录，去登录吗?',
+      '温馨提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info',
+      }
+    )
+      .then(() => {
+        // 点击确定要做的事
+        router.push('/authorize/settlement')
+      })
+      .catch(() => {})
+    }
 }
 </script>
 
@@ -194,7 +221,7 @@ const updateCartSku = (oldSkuId: string, newSku: any) => {
         <div class="total">
           共 {{ getters['cart/validTotal'] }} 件商品，已选择 {{ getters['cart/selectedTotal'] }} 件，商品合计：
           <span class="red">¥{{ getters['cart/selectedAllPrice'] }}</span>
-          <WwButton type="primary">下单结算</WwButton>
+          <WwButton @click="handleCheckOut" type="primary">下单结算</WwButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
