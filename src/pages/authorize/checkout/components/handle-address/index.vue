@@ -141,9 +141,8 @@ const hanleClickItem = (id: number) => {
   <el-dialog 
     @close="handleClickClose" 
     v-model="dialogAddressVisible.add" 
-    title="Shipping address"
+    :title="dialogAddressVisible.toggle ? '切换收货地址': '添加收货地址'"
     :width="600"
-    class="dialog"
   >
     <ElForm
       v-if="!dialogAddressVisible.toggle"
@@ -170,7 +169,7 @@ const hanleClickItem = (id: number) => {
         <ElInput v-model="form.addressTags" placeholder="请输入地址标签,以英文的逗号分隔" />
       </ElFormItem>
     </ElForm>
-    <div v-else>
+    <div class="div" v-else>
       <div 
         @click="hanleClickItem(item.id)" 
         class="text item" 
@@ -206,6 +205,10 @@ const hanleClickItem = (id: number) => {
   }
   .dialog-footer button:first-child {
     margin-right: 10px;
+  }
+  .div {
+    height: 400px;
+    overflow-y: scroll;
   }
 
   .text {
