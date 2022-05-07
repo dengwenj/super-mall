@@ -8,13 +8,18 @@ import HandleAddress from '../handle-address/index.vue'
 
 import type { IAddAddressF } from '@/services/api/address-api'
 
+export interface IAddressInfo extends IAddAddressF {
+  id: string
+}
+
+
 const showAddress = ref<IAddAddressF | null>(null)
 const dialogAddressVisible = ref({
   add: false,
   toggle: false,
   update: false
 })
-const addressList = ref<IAddAddressF[]>([])
+const addressList = ref<IAddressInfo[]>([])
 
 watchEffect(() => {
   // 默认地址，没有默认地址就用第一条地址，或没有收货地址
@@ -34,7 +39,7 @@ onMounted(async () => {
   addressList.value = res.result
 })
 
-const handleAddressList = (list: IAddAddressF[]) => {
+const handleAddressList = (list: IAddressInfo[]) => {
   addressList.value = list
 }
 

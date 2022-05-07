@@ -2,12 +2,13 @@
 import { reactive, ref, defineProps, defineEmits, onMounted } from 'vue'
 import { ElDialog, ElButton, ElForm, ElFormItem, ElInput, FormRules, ElMessage } from 'element-plus'
 
-import { addAddress, getAddress } from '@/services/api/address-api'
+import { addAddress, getAddress, updateAddress } from '@/services/api/address-api'
 
 import WwCity from '@/components/lib/WwCity.vue'
 
 import type { IAddAddressF } from '@/services/api/address-api'
 import type { ICodeMap } from './types'
+import type { IAddressInfo } from '../checkout-address/index.vue'
 
 const props = defineProps<{
   dialogAddressVisible: {
@@ -16,7 +17,7 @@ const props = defineProps<{
     update: boolean
   },
   addressList: any[]
-  showAddress: IAddAddressF
+  showAddress: IAddressInfo
 }>()
 const emits = defineEmits<{
   (e: 'update:dialogAddressVisible', prop: {
@@ -87,19 +88,13 @@ const handleClickClose = () => {
   )
 }
 
+// 点击确定
 const handleClickOk = async () => {
   // 点击确定走添加逻辑
-  if (!props.dialogAddressVisible.toggle) {
+  if (!props.dialogAddressVisible.toggle && !props.dialogAddressVisible.update) {
     if (!codeObj.value) {
       return ElMessage.warning('请选择地区')
     }
-
-    emits(
-      'update:dialogAddressVisible',
-      props.dialogAddressVisible.toggle
-        ? { add: false, toggle: true, update: false } 
-        : { add: false, toggle: false, update: false }
-    )
 
     elFormRef.value?.validate(async (isValid) => {
       if (isValid) {
@@ -113,7 +108,7 @@ const handleClickOk = async () => {
           })
           ElMessage.success('添加地址成功~')
 
-          // 获取收货地址列表
+          // 获取新的收货地址列表
           const res = await getAddress()
           emits('getAddressList', res.result)
         } catch (error: any) {
@@ -121,19 +116,35 @@ const handleClickOk = async () => {
         }
       }
     })
-    return
   }
 
   // 点击确定走切换逻辑
+  if (props.dialogAddressVisible.toggle) {
+    // 切换过后新的地址
+    emits('newShowAddress', newAddress)
+    ElMessage.success('切换地址成功~')
+  }
+
+  // 点击确定修改逻辑
+  if (props.dialogAddressVisible.update) {
+    try {
+      await updateAddress({ ...props.showAddress })
+      ElMessage.success('修改地址成功~')
+
+      // 点击修改过后新的获取收货地址列表
+      const res = await getAddress()
+      emits('getAddressList', res.result)
+    } catch (error: any) {
+      ElMessage.error(error.response.data)
+    }
+  }
+
   emits(
     'update:dialogAddressVisible',
-    props.dialogAddressVisible.toggle 
+    props.dialogAddressVisible.toggle
       ? { add: false, toggle: true, update: false } 
       : { add: false, toggle: false, update: false }
   )
-  // 切换过后新的地址
-  emits('newShowAddress', newAddress)
-  ElMessage.success('切换地址成功~')
 }
 
 const handleGetCode = (codeMap: ICodeMap, address: string) => {
