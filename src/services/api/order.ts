@@ -23,3 +23,17 @@ export const submitOrder = (data: ISubmitOrderProps) => {
     data
   })
 }
+
+export const getOrderDetail = (id: string) => {
+  return request({
+    method: 'GET',
+    url: `/member/order/${id}`
+  })
+}
+
+export const closeOrder = (id: string) => {
+  return request({
+    method: 'PUT',
+    url: `/member/order/${id}/cancel`
+  })
+}

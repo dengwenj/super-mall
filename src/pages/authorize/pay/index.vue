@@ -1,7 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+ 
+import { getOrderDetail, closeOrder } from '@/services/api/order'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
+
+const orderDetail = ref()
+// 30 分钟
+const time = ref(1800)
+const f = ref()
+const m = ref()
+
+const route = useRoute()
 
 const breadcrumb = computed(() => [
   {
@@ -16,6 +28,53 @@ const breadcrumb = computed(() => [
     name: '支付订单',
   }
 ])
+
+onMounted(async () => {
+  const res = await getOrderDetail(route.query.id as string)
+  orderDetail.value = res.result
+})
+
+// 30 分钟    1 60秒 30*60 1800
+let timer: NodeJS.Timeout
+// 每次以上来清除
+clearInterval(timer!)
+timer = setInterval(() => {
+  time.value--
+
+  if (time.value > 0) {
+
+    f.value = Math.floor(time.value / 60)
+
+    m.value = Math.floor(time.value % 60)
+
+    if (f.value < 10 && f.value > 1) {
+      f.value = '0' + f.value
+    }
+
+    if (f.value < 1) {
+      f.value = '00'
+    }
+
+    if (m.value < 10) {
+      m.value = '0' + m.value
+    }
+  }
+
+  if (time.value <= 0) {
+    clearInterval(timer)
+  }
+}, 1000)
+
+watch(time, async () => {
+  if (time.value === 0) {
+    try {
+      await closeOrder(route.query.id as string)
+      ElMessage.info('超过未支付时间，订单已取消~')
+    } catch (error: any) {
+      ElMessage.error(error.response.data)
+    }
+  }
+})
 </script>
 
 <template>
@@ -27,11 +86,11 @@ const breadcrumb = computed(() => [
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分59秒</span>, 超时后将取消订单</p>
+          <p>支付还剩 <span>{{ f }} 分 {{ m }} 秒</span>, 超时后将取消订单</p>
         </div>
-        <div class="amount">
+        <div class="amount" v-if="orderDetail">
           <span>应付总额：</span>
-          <span>¥5673.00</span>
+          <span>¥{{ orderDetail.payMoney.toFixed(2) }}</span>
         </div>
       </div>
       <!-- 付款方式 -->

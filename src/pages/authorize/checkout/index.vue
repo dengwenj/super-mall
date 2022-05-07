@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElButton, ElEmpty } from 'element-plus'
 
+import { useStore } from '@/store'
 import { createOrder, submitOrder } from '@/services/api/order'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
@@ -14,6 +15,7 @@ const checkoutAddressRef = ref()
 const isLoading = ref(false)
 
 const router = useRouter()
+const store = useStore()
 
 const breadcrumb = computed(() => [
   {
@@ -59,7 +61,10 @@ const handleSubmitOrder = async () => {
         buyerMessage: '非常好'
       }
     )
-    
+
+    // 获取最新的商品列表
+    store.dispatch('cart/getNewGoods')
+
     ElMessage.success('提交订单成功~')
     // 跳转到支付页面
     router.push({ path: '/authorize/pay', query: { id: res.result.id } })
