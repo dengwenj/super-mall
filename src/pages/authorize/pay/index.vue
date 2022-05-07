@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, onUpdated, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElDialog, ElButton } from 'element-plus'
  
 import { getOrderDetail, closeOrder } from '@/services/api/order'
+import { baseURL } from '../../../../address'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 
@@ -12,6 +13,7 @@ const orderDetail = ref()
 const time = ref(1800)
 const f = ref()
 const m = ref()
+const dialogVisible = ref(false)
 
 const route = useRoute()
 
@@ -75,6 +77,9 @@ watch(time, async () => {
     }
   }
 })
+
+const redirect = encodeURIComponent('http://www.corho.com:8080/#/pay/callback')
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirect}`
 </script>
 
 <template>
@@ -100,7 +105,7 @@ watch(time, async () => {
         <div class="item">
           <p>支付平台</p>
           <a class="btn wx" href="javascript:;"></a>
-          <a class="btn alipay" href="javascript:;"></a>
+          <a @click="dialogVisible = true" class="btn alipay" :href="payUrl" target="_blank"></a>
         </div>
         <div class="item">
           <p>支付方式</p>
@@ -112,6 +117,21 @@ watch(time, async () => {
         </div>
       </div>
     </div>
+    <ElDialog
+      v-model="dialogVisible"
+      title="正在支付..."
+      width="30%"
+      :before-close="handleClose"
+    >
+      <div class="pay-wait">
+        <div v-if="orderDetail">
+            <p>如果支付成功：</p>
+            <RouterLink :to="`/authorize/order/${orderDetail.id}`">查看订单详情></RouterLink>
+            <p>如果支付失败：</p>
+            <RouterLink to="/">查看相关疑问></RouterLink>
+        </div>
+      </div>
+    </ElDialog>
   </div>
 </template>
 
@@ -187,5 +207,17 @@ watch(time, async () => {
     }
   }
 }
+.pay-wait {
+    margin-top: -30px;
+    display: flex;
+    justify-content: center;
+    p {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    a {
+      color: @themeColor;
+    }
+  }
 </style>
 
