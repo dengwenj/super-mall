@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect, reactive } from 'vue'
+import { ref, onMounted, watchEffect, defineExpose } from 'vue'
 
 import { getAddress } from '@/services/api/address-api'
 
@@ -7,6 +7,7 @@ import WwButton from '@/components/lib/WwButton.vue'
 import HandleAddress from '../handle-address/index.vue'
 
 import type { IAddAddressF } from '@/services/api/address-api'
+import type { Ref } from 'vue'
 
 export interface IAddressInfo extends IAddAddressF {
   id: string
@@ -20,6 +21,12 @@ const dialogAddressVisible = ref({
   update: false
 })
 const addressList = ref<IAddressInfo[]>([])
+
+defineExpose<{
+  showAddress: Ref<IAddAddressF | null>
+}>({
+  showAddress
+})
 
 watchEffect(() => {
   // 默认地址，没有默认地址就用第一条地址，或没有收货地址

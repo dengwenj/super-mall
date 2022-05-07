@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage, ElButton, ElEmpty } from 'element-plus'
 
-import { createOrder } from '@/services/api/order'
+import { createOrder, submitOrder } from '@/services/api/order'
 
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import WwButton from '@/components/lib/WwButton.vue'
 import CheckoutAddress from './components/checkout-address/index.vue'
 
 const order = ref()
+const checkoutAddressRef = ref()
+const isLoading = ref(false)
 
 const router = useRouter()
 
@@ -30,6 +33,36 @@ onMounted(async () => {
   const res = await createOrder()
   order.value = res.result
 })
+
+const handleSubmitOrder = async () => {
+  isLoading.value = true
+
+  if (!order.value.goods.length) {
+    isLoading.value = false
+    return ElMessage.error('商品不能为空')
+  }
+
+  if (checkoutAddressRef.value.showAddress?.id) {
+    try {
+      const res = await submitOrder(
+        {
+          addressId: checkoutAddressRef.value.showAddress.id,
+          goods: order.value.goods,
+          deliveryTimeType: 1,
+          payType: 1,
+          payChannel: 1,
+          buyerMessage: '非常好'
+        }
+      )
+      console.log(res)
+      isLoading.value = false
+      ElMessage.success('提交订单成功~')
+    } catch (error: any) {
+      ElMessage.error(error.response.data)
+      isLoading.value = false
+    }
+  }
+}
 </script>
 
 <template>
@@ -40,7 +73,7 @@ onMounted(async () => {
         <!-- 收货地址 -->
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
-          <CheckoutAddress />
+          <CheckoutAddress ref="checkoutAddressRef" />
         </div>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
@@ -55,7 +88,14 @@ onMounted(async () => {
                 <th width="170">实付</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody v-if="!order.goods.length" class="empty">
+              <tr colspan="6">
+                <td colspan="6">
+                <el-empty description="商品为空哦~" />
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
               <tr v-for="item in order.goods" :key="item.skuId">
                 <td>
                   <a @click="router.push(`/product/${item.id}`)" href="javascript:;" class="info">
@@ -86,7 +126,15 @@ onMounted(async () => {
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <WwButton type="primary">提交订单</WwButton>
+          <ElButton
+            :loading="isLoading"
+            style="background: #e55b29; border: none; width: 150px" 
+            type="primary" 
+            size="large" 
+            @click="handleSubmitOrder"
+          >
+            提交订单
+          </ElButton>
         </div>
       </div>
     </div>
