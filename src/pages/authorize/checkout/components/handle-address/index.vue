@@ -84,7 +84,9 @@ const rules = reactive<FormRules>({
 const handleClickClose = () => {
   emits(
     'update:dialogAddressVisible', 
-    props.dialogAddressVisible.toggle ? { add: false, toggle: true, update: false } : { add: false, toggle: false, update: false }
+    props.dialogAddressVisible.toggle
+      ? { add: false, toggle: true, update: false }
+      : { add: false, toggle: false, update: false }
   )
 }
 
@@ -128,7 +130,11 @@ const handleClickOk = async () => {
   // 点击确定修改逻辑
   if (props.dialogAddressVisible.update) {
     try {
-      await updateAddress({ ...props.showAddress })
+      await updateAddress({
+        ...props.showAddress,
+        ...codeObj.value,
+        fullLocation: fullLocation.value!,
+      })
       ElMessage.success('修改地址成功~')
 
       // 点击修改过后新的获取收货地址列表
@@ -164,13 +170,17 @@ const hanleClickItem = (id: number) => {
   <el-dialog
     @close="handleClickClose" 
     v-model="dialogAddressVisible.add" 
-    :title="dialogAddressVisible.toggle ? '切换收货地址': '添加收货地址'"
+    :title="
+      dialogAddressVisible.toggle
+      ? '切换收货地址': dialogAddressVisible.update
+      ? '修改收货地址' : '添加收货地址'
+    "
     :width="600"
   >
     <ElForm
       v-if="!dialogAddressVisible.toggle"
       ref="elFormRef"
-      :model="form"
+      :model="props.dialogAddressVisible.update ? showAddress : form"
       :rules="rules"
     >
       <ElFormItem label="收货人：" :label-width="formLabelWidth" prop="receiver">
