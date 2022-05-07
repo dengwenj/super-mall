@@ -105,7 +105,8 @@ const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redire
         <div class="item">
           <p>支付平台</p>
           <a class="btn wx" href="javascript:;"></a>
-          <a @click="dialogVisible = true" class="btn alipay" :href="payUrl" target="_blank"></a>
+          <!-- :href="payUrl" -->
+          <a @click="dialogVisible = true" class="btn alipay" target="_blank"></a>
         </div>
         <div class="item">
           <p>支付方式</p>

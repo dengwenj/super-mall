@@ -29,7 +29,7 @@ const handleLoginout = () => {
     <div class="container">
       <ul>
         <template v-if="token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{store.state.user.profile?.account}}</a></li>
+          <li><a href="javascript:;" @click="$router.push('/authorize/my')"><i class="iconfont icon-user"></i>{{store.state.user.profile?.account}}</a></li>
           <el-popover v-model:visible="visible" placement="bottom" :width="160">
             <p style="text-align: center;">确定退出登录吗?</p>
             <div style="text-align: right; margin-top: 10px; ">
