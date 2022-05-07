@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, defineProps, defineEmits, nextTick } from 'vue'
+import { reactive, ref, defineProps, defineEmits, onMounted } from 'vue'
 import { ElDialog, ElButton, ElForm, ElFormItem, ElInput, FormRules, ElMessage } from 'element-plus'
 
 import { addAddress, getAddress } from '@/services/api/address-api'
@@ -13,13 +13,16 @@ const props = defineProps<{
   dialogAddressVisible: {
     add: boolean
     toggle: boolean
+    update: boolean
   },
   addressList: any[]
+  showAddress: IAddAddressF
 }>()
 const emits = defineEmits<{
   (e: 'update:dialogAddressVisible', prop: {
     add: boolean
     toggle: boolean
+    update: boolean
   }): void
   (e: 'getAddressList', prop: IAddAddressF[]): void
   (e: 'newShowAddress', prop: any): void
@@ -38,6 +41,11 @@ const form = reactive<IAddAddressF>({
 })
 const clickId = ref<null | number>(null)
 const newAddress = ref()
+const vModel = ref()
+
+onMounted(() => {
+  vModel.value = props.dialogAddressVisible.update ? props.showAddress : form
+})
 
 const phone = (rule: any, value: any, callback: any) => {
   const phoneR = /^1[3456789]\d{9}$/
@@ -75,7 +83,7 @@ const rules = reactive<FormRules>({
 const handleClickClose = () => {
   emits(
     'update:dialogAddressVisible', 
-    props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+    props.dialogAddressVisible.toggle ? { add: false, toggle: true, update: false } : { add: false, toggle: false, update: false }
   )
 }
 
@@ -88,7 +96,9 @@ const handleClickOk = async () => {
 
     emits(
       'update:dialogAddressVisible',
-      props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+      props.dialogAddressVisible.toggle
+        ? { add: false, toggle: true, update: false } 
+        : { add: false, toggle: false, update: false }
     )
 
     elFormRef.value?.validate(async (isValid) => {
@@ -117,7 +127,9 @@ const handleClickOk = async () => {
   // 点击确定走切换逻辑
   emits(
     'update:dialogAddressVisible',
-    props.dialogAddressVisible.toggle ? { add: false, toggle: true } : { add: false, toggle: false }
+    props.dialogAddressVisible.toggle 
+      ? { add: false, toggle: true, update: false } 
+      : { add: false, toggle: false, update: false }
   )
   // 切换过后新的地址
   emits('newShowAddress', newAddress)
@@ -138,7 +150,7 @@ const hanleClickItem = (id: number) => {
 </script>
 
 <template>
-  <el-dialog 
+  <el-dialog
     @close="handleClickClose" 
     v-model="dialogAddressVisible.add" 
     :title="dialogAddressVisible.toggle ? '切换收货地址': '添加收货地址'"
@@ -151,22 +163,22 @@ const hanleClickItem = (id: number) => {
       :rules="rules"
     >
       <ElFormItem label="收货人：" :label-width="formLabelWidth" prop="receiver">
-        <ElInput v-model="form.receiver" placeholder="请输入收货人" />
+        <ElInput v-model="vModel.receiver" placeholder="请输入收货人" />
       </ElFormItem>
       <ElFormItem label="手机号：" :label-width="formLabelWidth" prop="contact">
-        <ElInput v-model="form.contact" placeholder="请输入手机号" />
+        <ElInput v-model="vModel.contact" placeholder="请输入手机号" />
       </ElFormItem>
       <ElFormItem label="地区：" :label-width="formLabelWidth">
-        <WwCity :width="300" @getCode="handleGetCode" />
+        <WwCity :width="300" @getCode="handleGetCode" :fullLocation="vModel.fullLocation" />
       </ElFormItem>
       <ElFormItem label="详细地址：" :label-width="formLabelWidth" prop="address">
-        <ElInput v-model="form.address" placeholder="请输入详细地址" />
+        <ElInput v-model="vModel.address" placeholder="请输入详细地址" />
       </ElFormItem>
       <ElFormItem label="邮政编码：" :label-width="formLabelWidth" prop="postalCode">
-        <ElInput v-model="form.postalCode" placeholder="请输入邮政编码" />
+        <ElInput v-model="vModel.postalCode" placeholder="请输入邮政编码" />
       </ElFormItem>
       <ElFormItem label="地址标签：" :label-width="formLabelWidth" prop="addressTags">
-        <ElInput v-model="form.addressTags" placeholder="请输入地址标签,以英文的逗号分隔" />
+        <ElInput v-model="vModel.addressTags" placeholder="请输入地址标签,以英文的逗号分隔" />
       </ElFormItem>
     </ElForm>
     <div class="div" v-else>

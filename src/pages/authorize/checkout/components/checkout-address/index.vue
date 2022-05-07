@@ -11,7 +11,8 @@ import type { IAddAddressF } from '@/services/api/address-api'
 const showAddress = ref<IAddAddressF | null>(null)
 const dialogAddressVisible = ref({
   add: false,
-  toggle: false
+  toggle: false,
+  update: false
 })
 const addressList = ref<IAddAddressF[]>([])
 
@@ -41,7 +42,8 @@ const handleAddressList = (list: IAddAddressF[]) => {
 const handleToggleAddress = () => {
   dialogAddressVisible.value = {
     add: true,
-    toggle: true
+    toggle: true,
+    update: false
   }
 }
 
@@ -49,13 +51,23 @@ const handleToggleAddress = () => {
 const handleAddress = () => {
   dialogAddressVisible.value = {
     add: true,
-    toggle: false
+    toggle: false,
+    update: false
   }
 }
 
 // 切换过后显示新的地址
 const handleNewShowAddress = (newAddress: any) => {
   showAddress.value = newAddress.value
+}
+
+// 修改地址
+const updateAddress = () => {
+  dialogAddressVisible.value = {
+    add: true,
+    toggle: false,
+    update: true
+  }
 }
 </script>
 
@@ -72,7 +84,7 @@ const handleNewShowAddress = (newAddress: any) => {
           <li><span>联系方式：</span>{{ showAddress?.contact.slice(0, 3) + '****' + showAddress?.contact.slice(7) }}</li>
           <li><span>收货地址：</span>{{ showAddress?.fullLocation + showAddress?.address }}</li>
         </ul>
-        <a href="javascript:;">修改地址</a>
+        <a href="javascript:;" @click="updateAddress">修改地址</a>
       </div>
       <div class="action">
         <WwButton type="plain" class="btn" @click="handleToggleAddress">切换地址</WwButton>
@@ -80,11 +92,13 @@ const handleNewShowAddress = (newAddress: any) => {
       </div>
     </div>
     <!-- 是否显示对话框 -->
-    <HandleAddress 
+    <HandleAddress
+      v-if="dialogAddressVisible.add"
       v-model:dialogAddressVisible="dialogAddressVisible"
       @getAddressList="handleAddressList"
       @newShowAddress="handleNewShowAddress"
       :addressList="addressList"
+      :showAddress="showAddress"
     />
   </div>
 </template>

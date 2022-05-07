@@ -5,6 +5,7 @@ import axios from 'axios'
 
 withDefaults(defineProps<{
   width: number
+  fullLocation: string
 }>(), {
   width: 0
 })
@@ -69,10 +70,13 @@ const handleCityName = (code: string) => {
   <div class="xtx-city" ref="cityRef">
     <div class="select" :style="{ width: width ? width + 'px' : '130px' }" @click="handleClickCity" :class="isShow ? 'active' : ''">
       <span class="placeholder">
-        <template v-if="!address.length">
+        <template v-if="!address.length && !fullLocation">
           请选择配送地址
         </template>
-        <span v-for="item in address" :key="item.code">
+        <span v-if="fullLocation && !address.length">
+          {{ fullLocation }}
+        </span>
+        <span v-else v-for="item in address" :key="item.code">
           {{ item.name }}
         </span>
       </span>
