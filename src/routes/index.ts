@@ -13,6 +13,7 @@ const Login = () => import('@/pages/login/index.vue')
 const CallBack = () => import('@/pages/login/callback.vue')
 const Cart = () => import('@/pages/cart/index.vue')
 const Checkout = () => import('@/pages/authorize/checkout/index.vue')
+const Pay = () => import('@/pages/authorize/pay/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -42,6 +43,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/authorize/checkout',
         component: Checkout
+      },
+      {
+        path: '/authorize/pay',
+        component: Pay
       }
     ]
   },

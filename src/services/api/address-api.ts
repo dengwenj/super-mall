@@ -15,7 +15,6 @@ interface IAddressInfo extends IAddAddressF {
   id: string
 }
 
-
 export const addAddress = (data: IAddAddressF) => {
   return request({
     method: 'POST',

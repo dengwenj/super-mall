@@ -37,31 +37,36 @@ onMounted(async () => {
 const handleSubmitOrder = async () => {
   isLoading.value = true
 
+  if (!checkoutAddressRef.value.showAddress?.id) {
+    isLoading.value = false
+    return ElMessage.error('请填写收货地址~')
+  }
+
   if (!order.value.goods.length) {
     isLoading.value = false
     return ElMessage.error('商品不能为空')
   }
 
-  if (checkoutAddressRef.value.showAddress?.id) {
-    try {
-      const res = await submitOrder(
-        {
-          addressId: checkoutAddressRef.value.showAddress.id,
-          goods: order.value.goods,
-          deliveryTimeType: 1,
-          payType: 1,
-          payChannel: 1,
-          buyerMessage: '非常好'
-        }
-      )
-      console.log(res)
-      isLoading.value = false
-      ElMessage.success('提交订单成功~')
-    } catch (error: any) {
-      ElMessage.error(error.response.data)
-      isLoading.value = false
-    }
+  // 说明前的都通过了
+  try {
+    const res = await submitOrder(
+      {
+        addressId: checkoutAddressRef.value.showAddress.id,
+        goods: order.value.goods,
+        deliveryTimeType: 1,
+        payType: 1,
+        payChannel: 1,
+        buyerMessage: '非常好'
+      }
+    )
+    
+    ElMessage.success('提交订单成功~')
+    // 跳转到支付页面
+    router.push({ path: '/authorize/pay', query: { id: res.result.id } })
+  } catch (error: any) {
+    ElMessage.error(error.response.data)
   }
+  isLoading.value = false
 }
 </script>
 
