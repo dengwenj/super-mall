@@ -66,7 +66,7 @@ timer = setInterval(() => {
 }, 1000)
 
 watch(time, async () => {
-  if (time.value === 0) {
+  if (time.value <= 0) {
     try {
       await closeOrder(route.query.id as string)
       ElMessage.info('超过未支付时间，订单已取消~')
@@ -83,12 +83,13 @@ watch(time, async () => {
       <Breadcrumb :breadcrumb="breadcrumb" /> 
       <!-- 付款信息 -->
       <div class="pay-info">
-        <span class="icon iconfont icon-queren2"></span>
+        <span v-if="time > 0" class="icon iconfont icon-queren2"></span>
         <div class="tip">
-          <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>{{ f }} 分 {{ m }} 秒</span>, 超时后将取消订单</p>
+          <p v-if="time > 0">订单提交成功！请尽快完成支付。</p>
+          <p v-if="time > 0">支付还剩 <span>{{ f }} 分 {{ m }} 秒</span>, 超时后将取消订单</p>
+          <p v-if="time <= 0">订单已经超时，已取消订单</p>
         </div>
-        <div class="amount" v-if="orderDetail">
+        <div class="amount" v-if="orderDetail && time > 0">
           <span>应付总额：</span>
           <span>¥{{ orderDetail.payMoney.toFixed(2) }}</span>
         </div>

@@ -34,6 +34,9 @@ export const getOrderDetail = (id: string) => {
 export const closeOrder = (id: string) => {
   return request({
     method: 'PUT',
-    url: `/member/order/${id}/cancel`
+    url: `/member/order/${id}/cancel`,
+    data: {
+      cancelReason: '超时了~'
+    }
   })
 }
