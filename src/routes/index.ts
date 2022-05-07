@@ -1,4 +1,5 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { h } from 'vue'
+import { createRouter, createWebHashHistory, RouterView } from 'vue-router'
 
 import store from '@/store'
 
@@ -17,6 +18,7 @@ const Pay = () => import('@/pages/authorize/pay/index.vue')
 const MyLayout = () => import('@/pages/authorize/layout.vue')
 const My = () => import('@/pages/authorize/my/index.vue')
 const Order = () => import('@/pages/authorize/order/index.vue')
+const OrderDetail = () => import('@/pages/authorize/order/detail.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -61,7 +63,11 @@ const routes: RouteRecordRaw[] = [
           },
           {
             path: '/authorize/order',
-            component: Order
+            component: { render: () => h(RouterView) },
+            children: [
+              { path: '', component: Order },
+              { path: ':id', component: OrderDetail }
+            ]
           }
         ]
       }

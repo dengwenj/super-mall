@@ -18,7 +18,7 @@
       </div>
       <h4>交易管理</h4>
       <div class="links">
-        <router-link exact-active-class="active" to="/authorize/order">我的订单</router-link>
+        <router-link active-class="active" to="/authorize/order">我的订单</router-link>
         <a href="javascript:;">优惠券</a>
         <a href="javascript:;">礼品卡</a>
         <a href="javascript:;">评价晒单</a>
