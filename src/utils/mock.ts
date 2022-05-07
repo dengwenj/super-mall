@@ -2,8 +2,6 @@ import Mock from 'mockjs'
 import qs from 'qs'
 
 Mock.mock(/\/member\/collect/, 'get', (config: any) => {
-  console.log(config);
-  
   const queryString = config.url.split('?')[1]
   const queryObject = qs.parse(queryString)
   const items = []
@@ -14,7 +12,7 @@ Mock.mock(/\/member\/collect/, 'get', (config: any) => {
       desc: '@ctitle(4,10)',
       price: '@float(100,200,2,2)',
       // Mock.mock('@integer(1,8)')
-      picture: `http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/clothes_goods_${i}.jpg`
+      picture: `http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/clothes_goods_${i + 1}.jpg`
     }))
   }
   return {

@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const isActive = ref(0)
-
-const handleClick = () => {
-  
-}
 </script>
 
 <template>
@@ -13,29 +6,29 @@ const handleClick = () => {
     <div class="user-manage">
       <h4>我的账户</h4>
       <div class="links">
-        <a @click="handleClick" href="javascript:;">个人中心</a>
-        <a @click="handleClick" href="javascript:;">消息通知</a>
-        <a @click="handleClick" href="javascript:;">个人信息</a>
-        <a @click="handleClick" href="javascript:;">安全设置</a>
-        <a @click="handleClick" href="javascript:;">地址管理</a>
-        <a @click="handleClick" href="javascript:;">我的积分</a>
-        <a @click="handleClick" href="javascript:;">我的足迹</a>
-        <a @click="handleClick" href="javascript:;">邀请有礼</a>
-        <a @click="handleClick" href="javascript:;">幸运抽奖</a>
+        <router-link exact-active-class="active" to="/authorize/my">个人中心</router-link>
+        <a href="javascript:;">消息通知</a>
+        <a href="javascript:;">个人信息</a>
+        <a href="javascript:;">安全设置</a>
+        <a href="javascript:;">地址管理</a>
+        <a href="javascript:;">我的积分</a>
+        <a href="javascript:;">我的足迹</a>
+        <a href="javascript:;">邀请有礼</a>
+        <a href="javascript:;">幸运抽奖</a>
       </div>
       <h4>交易管理</h4>
       <div class="links">
-        <a @click="handleClick" href="javascript:;">我的订单</a>
-        <a @click="handleClick" href="javascript:;">优惠券</a>
-        <a @click="handleClick" href="javascript:;">礼品卡</a>
-        <a @click="handleClick" href="javascript:;">评价晒单</a>
-        <a @click="handleClick" href="javascript:;">售后服务</a>
+        <router-link exact-active-class="active" to="/authorize/order">我的订单</router-link>
+        <a href="javascript:;">优惠券</a>
+        <a href="javascript:;">礼品卡</a>
+        <a href="javascript:;">评价晒单</a>
+        <a href="javascript:;">售后服务</a>
       </div>
       <h4>我的收藏</h4>
       <div class="links">
-        <a @click="handleClick" href="javascript:;">收藏的商品</a>
-        <a @click="handleClick" href="javascript:;">收藏的专题</a>
-        <a @click="handleClick" href="javascript:;">关注的品牌</a>
+        <a href="javascript:;">收藏的商品</a>
+        <a href="javascript:;">收藏的专题</a>
+        <a href="javascript:;">关注的品牌</a>
       </div>
       <h4>帮助中心</h4>
       <div class="links">

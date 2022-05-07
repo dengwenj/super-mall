@@ -16,6 +16,7 @@ const Checkout = () => import('@/pages/authorize/checkout/index.vue')
 const Pay = () => import('@/pages/authorize/pay/index.vue')
 const MyLayout = () => import('@/pages/authorize/layout.vue')
 const My = () => import('@/pages/authorize/my/index.vue')
+const Order = () => import('@/pages/authorize/order/index.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -57,6 +58,10 @@ const routes: RouteRecordRaw[] = [
           {
             path: '/authorize/my',
             component: My
+          },
+          {
+            path: '/authorize/order',
+            component: Order
           }
         ]
       }

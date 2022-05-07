@@ -15,7 +15,6 @@ onMounted(async () => {
     page: 1,
     pageSize: 4
   })
-  console.log(res)
   collectGoods.value = res.result.items
 })
 
