@@ -7,3 +7,4 @@ declare module '*.vue' {
 declare module '*.png'
 declare module '*.js'
 declare module 'qc'
+declare module 'mockjs'

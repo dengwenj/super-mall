@@ -39,5 +39,10 @@ defineProps<{
       font-weight: normal;
     }
   }
+    .goods-list {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+  }
 }
 </style>

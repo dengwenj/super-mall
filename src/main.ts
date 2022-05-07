@@ -6,6 +6,7 @@ import App from './App.vue'
 import UIComponent from '@/global/component'
 import directive from './global/directive'
 import methods from './global/methods'
+import '@/utils/mock'
 
 import 'element-plus/dist/index.css'
 import 'normalize.css'
