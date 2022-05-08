@@ -17,7 +17,7 @@ const Checkout = () => import('@/pages/authorize/checkout/index.vue')
 const Pay = () => import('@/pages/authorize/pay/index.vue')
 const MyLayout = () => import('@/pages/authorize/layout.vue')
 const My = () => import('@/pages/authorize/my/index.vue')
-const Order = () => import('@/pages/authorize/order/index.vue')
+const Order = () => import('@/pages/authorize/order')
 const OrderDetail = () => import('@/pages/authorize/order/detail.vue')
 
 const routes: RouteRecordRaw[] = [
