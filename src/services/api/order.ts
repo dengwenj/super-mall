@@ -40,3 +40,11 @@ export const closeOrder = (id: string) => {
     }
   })
 }
+
+export const getMyOrder = (params: { page: number, pageSize: number, orderState?: number }) => {
+  return request({
+    method: 'GET',
+    url: '/member/order',
+    params
+  })
+}
