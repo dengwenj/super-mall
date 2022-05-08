@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, reactive, ref, watchEffect } from 'vue'
 import { ElPagination } from 'element-plus'
 
 import { getMyOrder } from '@/services/api/order'
@@ -10,38 +10,52 @@ import WwTabsPanel from '@/components/WwTabs/panel'
 import OrderItem from './components/order-item'
 
 export default defineComponent(function Order() {
-  const active = ref('all')
   const myOrder = ref()
+  const myOrderParams = reactive({
+    page: 1,
+    pageSize: 5,
+    orderState: 0
+  })
+  const isLoading = ref(false)
 
-  onMounted(async () => {
-    const res = await getMyOrder({ page: 1, pageSize: 5, orderState: 0 })
+  watchEffect(async () => {
+    isLoading.value = true
+    const res = await getMyOrder(myOrderParams)
+    
     myOrder.value = res.result
+    isLoading.value = false
   })
 
   /**
    * 处理函数
    */
-  const updateActive = (name: string) => {
-    active.value = name
+  const handleUpdateActive = (name: string, idx: number) => {
+    myOrderParams.page = 1
+    myOrderParams.orderState = idx
   }
   
-  const handleCurrentChange = (current: number) => {
-    console.log(11);
-    
-    getMyOrder({ page: current, pageSize: 5, orderState: 0 }).then((res) => {
+  const handleCurrentChange = async (current: number) => {
+    console.log('点击了这个函数没触发')
+
+    const res = await getMyOrder(myOrderParams)
+    myOrder.value = res.result
+  }
+
+  const handleNextOrPrevClick = (val: number) => { 
+    myOrderParams.page = val
+    getMyOrder(myOrderParams).then((res) => {
       myOrder.value = res.result
     })
   }
 
-  const handleNextOrPrevClick = (val: number) => {
-    getMyOrder({ page: val, pageSize: 5, orderState: 0 }).then((res) => {
-      myOrder.value = res.result
-    })
+  const hh = () => {
+    console.log('hh');
+    
   }
 
   return () => (
     <div class='order'>
-      <WwTabs active={active.value} updateActive={updateActive}>
+      <WwTabs onUpdateActive={handleUpdateActive}>
         {
           orderStatus.map((item) => {
             return (
@@ -58,21 +72,28 @@ export default defineComponent(function Order() {
 
       {/* 订单列表 */}
       {
+        isLoading.value ? '加载中...' : ''
+      }
+      {
         myOrder.value && (
           <div class="order-list">
             <OrderItem items={myOrder.value.items} />
 
             {/* 分页 */}
-            <ElPagination 
-              style={{ justifyContent: 'center' }} 
-              background 
-              layout="prev, pager, next"
-              page-size={5}
-              total={myOrder.value.counts}
-              onCurrent-change={handleCurrentChange}
-              onNext-click={handleNextOrPrevClick}
-              onPrev-click={handleNextOrPrevClick}
-            />
+            {
+              myOrder.value.items.length ? (
+                <ElPagination 
+                  style={{ justifyContent: 'center' }} 
+                  background 
+                  layout="prev, pager, next"
+                  page-size={myOrderParams.pageSize}
+                  total={myOrder.value.counts}
+                  onNext-click={handleNextOrPrevClick}
+                  onPrev-click={handleNextOrPrevClick}
+                  onCurrent-change={handleCurrentChange}
+                />
+              ) : ''
+            }
           </div>
         )
       }

@@ -1,23 +1,24 @@
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import './index.less'
 
 import type { SetupContext } from 'vue'
 
 interface IWwTabsProps { 
-  active: string
-  updateActive: (name: string) => void
+  onUpdateActive: (name: string, idx: number) => void
 }
 
 // function WwTabs 这个相当于 setup 函数
 export default defineComponent<IWwTabsProps>(function WwTabs(props, ctx: SetupContext) {
+  const active = ref('all')
+
   // 点击每一项
-  const handleClick = (name: string) => {
+  const handleClick = (name: string, idx: number) => {
     return () => {
-      (ctx.attrs.updateActive as (name: string) => void)(name)
+      active.value = name
+      ;(ctx.attrs.onUpdateActive as (name: string, idx: number) => void)(name, idx)
     }
   }
-
   return () => {
     const dynamicNode: any[] = []
 
@@ -37,11 +38,11 @@ export default defineComponent<IWwTabsProps>(function WwTabs(props, ctx: SetupCo
             })
           }
           {
-            dynamicNode.map((item) => {
+            dynamicNode.map((item, idx) => {
               return (
                 <a
-                  class={ctx.attrs.active === item.props.name ? 'active' : ''}
-                  onClick={handleClick(item.props.name)} 
+                  class={active.value === item.props.name ? 'active' : ''}
+                  onClick={handleClick(item.props.name, idx)} 
                   href="javascript:;" 
                   key={item.key!}
                 >
