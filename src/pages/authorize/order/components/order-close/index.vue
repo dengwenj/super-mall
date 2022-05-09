@@ -10,7 +10,7 @@ const curText = ref('')
 const isLoading = ref(false)
 
 const props = defineProps<{
-  order: any
+  orderId: any
 }>()
 
 defineExpose({
@@ -25,13 +25,14 @@ const handleClick = async () => {
   isLoading.value = true
 
   try {
-    await closeOrder(props.order.value, curText.value)
+    await closeOrder(props.orderId.value || props.orderId, curText.value)
     dialogVisible.value = false
     curText.value = ''
     isLoading.value = false
     ElMessage.success('取消订单成功~')
   } catch (error: any) {
     ElMessage.error(error.response.data)
+    isLoading.value = false
   }
 }
 
@@ -48,6 +49,7 @@ const handleC = () => {
     width="40%"
     :before-close="handleClose"
     @close="handleC"
+    style="text-align: left"
   >
      <!-- 组件内容 -->
     <div class="cancel-info">
@@ -79,6 +81,7 @@ const handleC = () => {
   p {
     font-size: 16px;
     line-height: 35px;
+    text-align: left;
     &.tip {
       color: #999;
     }
@@ -106,5 +109,8 @@ const handleC = () => {
       }
     }
   }
+}
+.el-dialog {
+  text-align: left;
 }
 </style>

@@ -30,10 +30,6 @@ onMounted(async () => {
     </p>
     <a href="javascript:;">查看物流</a>
   </div>
-  <!-- 查看物流组件 -->
-  <Teleport to="#dailog">
-    <OrderLogistics ref="logisticsOrderCom" />
-  </Teleport>
 </template>
 
 <style scoped lang="less">

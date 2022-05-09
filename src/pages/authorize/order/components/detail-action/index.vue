@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 
 import WwButton from '@/components/lib/WwButton.vue'
+import OrderClose from '../order-close/index.vue'
 
 const props = defineProps<{
   order: any
 }>()
 
-console.log(props.order);
+const orderCloseRef = ref()
+const orderId = ref('')
 
+const handleCloseOrder = (id: string) => {
+  orderCloseRef.value.dialogVisible = true
+  orderId.value = id
+}
 </script>
 
 <template>
@@ -25,7 +31,7 @@ console.log(props.order);
         <!-- 待付款 -->
         <template v-if="order.orderState === 1">
           <WwButton @click="$router.push('/authorize/pay?id='+order.id)" type="primary" size="small">立即付款</WwButton>
-          <WwButton type="gray" size="small">取消订单</WwButton>
+          <WwButton @click="handleCloseOrder(order.id)" type="gray" size="small">取消订单</WwButton>
         </template>
         <!-- 待发货 -->
         <template v-if="order.orderState === 2">
@@ -49,6 +55,7 @@ console.log(props.order);
           <WwButton type="gray" size="small">申请售后</WwButton>
         </template>
         <!-- 已取消 -->
+        <OrderClose ref="orderCloseRef" :orderId="orderId" />
       </div>
     </div>
 </template>

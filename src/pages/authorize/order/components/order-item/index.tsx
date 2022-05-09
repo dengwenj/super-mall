@@ -108,7 +108,7 @@ export default defineComponent<{ items: any[] }>(function OrderItem(props, ctx: 
                   </div>
                 </div>
                 {/* 取消订单 */}
-                <OrderClose ref={orderCloseRef} order={orderId} />
+                <OrderClose ref={orderCloseRef} orderId={orderId} />
               </div>
             )
           })

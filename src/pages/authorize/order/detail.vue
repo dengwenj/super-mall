@@ -5,6 +5,7 @@ import { ElSteps, ElStep } from 'element-plus'
 
 import DetailAction from './components/detail-action/index.vue'
 import Detaillogistics from './components/detail-logistics/index.vue'
+import DetailInfo from './components/detail-info/index.vue'
 
 import { getOrderDetail } from '@/services/api/order'
 
@@ -58,6 +59,7 @@ onMounted(async () => {
     <!-- 物流栏 -->
     <Detaillogistics :order="order" /> 
     <!-- 订单商品信息 -->
+    <DetailInfo :order="order" />
   </div>
 </template>
 
