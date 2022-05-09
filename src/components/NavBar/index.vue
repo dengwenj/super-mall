@@ -45,7 +45,7 @@ const handleLoginout = () => {
           <li><a href="javascript:;" @click="handleLoign">请先登录</a></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
-        <li><a href="javascript:;">我的订单</a></li>
+        <li><a @click="router.push('/authorize/order')" href="javascript:;">我的订单</a></li>
         <li><a href="javascript:;">会员中心</a></li>
         <li><a href="javascript:;">帮助中心</a></li>
         <li><a href="http://dengwj.vip" target="_brank">关于自己</a></li>
