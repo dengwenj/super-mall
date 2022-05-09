@@ -82,7 +82,7 @@ export default defineComponent(function Order() {
             {/* 分页 */}
             {
               myOrder.value.items.length ? (
-                <ElPagination 
+                <ElPagination
                   style={{ justifyContent: 'center' }} 
                   background 
                   layout="prev, pager, next"
@@ -92,7 +92,7 @@ export default defineComponent(function Order() {
                   onPrev-click={handleNextOrPrevClick}
                   onCurrent-change={handleCurrentChange}
                 />
-              ) : ''
+              ) : <div style={{ color: '#ee7b4b', fontSize: '20px', textAlign: 'center' }}>暂无数据...</div>
             }
           </div>
         )

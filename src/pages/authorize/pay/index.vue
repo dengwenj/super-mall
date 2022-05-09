@@ -70,7 +70,7 @@ timer = setInterval(() => {
 watch(time, async () => {
   if (time.value <= 0) {
     try {
-      await closeOrder(route.query.id as string)
+      // await closeOrder(route.query.id as string)
       ElMessage.info('超过未支付时间，订单已取消~')
     } catch (error: any) {
       ElMessage.error(error.response.data)

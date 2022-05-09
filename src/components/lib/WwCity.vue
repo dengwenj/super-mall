@@ -68,7 +68,7 @@ const handleCityName = (code: string) => {
 
 <template>
   <div class="xtx-city" ref="cityRef">
-    <div class="select" :style="{ width: width ? width + 'px' : '130px' }" @click="handleClickCity" :class="isShow ? 'active' : ''">
+    <div class="select" :style="{ width: width ? width + 'px' : '' }" @click="handleClickCity" :class="isShow ? 'active' : ''">
       <span class="placeholder">
         <template v-if="!address.length && !fullLocation">
           请选择配送地址

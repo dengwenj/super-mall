@@ -31,12 +31,12 @@ export const getOrderDetail = (id: string) => {
   })
 }
 
-export const closeOrder = (id: string) => {
+export const closeOrder = (id: string, cancelReason: string = '超时了') => {
   return request({
     method: 'PUT',
     url: `/member/order/${id}/cancel`,
     data: {
-      cancelReason: '超时了~'
+      cancelReason
     }
   })
 }
@@ -46,5 +46,15 @@ export const getMyOrder = (params: { page: number, pageSize: number, orderState?
     method: 'GET',
     url: '/member/order',
     params
+  })
+}
+
+export const deleteOrder = (ids: string[]) => {
+  return request({
+    method: 'DELETE',
+    url: '/member/order',
+    data: {
+      ids
+    }
   })
 }

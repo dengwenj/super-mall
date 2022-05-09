@@ -1,15 +1,39 @@
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 import { orderStatus } from '@/global/constants'
+import { deleteOrder } from '@/services/api/order'
 
 import WwButton from '@/components/lib/WwButton.vue'
+import OrderClose from '../order-close/index.vue'
 import './index.less'
 
 import type { SetupContext } from 'vue'
 
 export default defineComponent<{ items: any[] }>(function OrderItem(props, ctx: SetupContext) {
+  const orderCloseRef = ref()
   const router = useRouter()
+  const orderId = ref('')
+  const isClick = ref(true)
+
+  const handleCloseOrder = (id: string) => {
+    orderCloseRef.value.dialogVisible = true
+    orderId.value = id
+  }
+
+  const handleDetele = async (id: string) => {
+    isClick.value = false
+
+    try {
+      await deleteOrder([id])
+      ElMessage.success('删除订单成功~')
+      isClick.value = true
+    } catch (error: any) {
+      ElMessage.error(error.response.data)
+      isClick.value = true
+    }
+  }
 
   return () => {
     return (
@@ -30,7 +54,7 @@ export default defineComponent<{ items: any[] }>(function OrderItem(props, ctx: 
                     )
                   }
                   {
-                    [5, 6].includes(item.orderState) && <a href="javascript:;" class='del'>删除</a>
+                    [5, 6].includes(item.orderState) && <a  style={ !isClick.value ? { pointerEvents: 'none' } : ''} onClick={() => handleDetele(item.id)} href="javascript:;" class='del'>删除</a>
                   }
                 </div>
                 <div class="body">
@@ -77,12 +101,14 @@ export default defineComponent<{ items: any[] }>(function OrderItem(props, ctx: 
                   <div class="column action">
                     {item.orderState === 1 && <WwButton onClick={() => router.push(`/authorize/pay?id=${item.id}`)} type="primary" size="small">立即付款</WwButton>}
                     {item.orderState === 3 && <WwButton type="primary" size="small">确认收货</WwButton>}
-                    <p><a href="javascript:;">查看详情</a></p>
-                    {item.orderState === 1 && <p><a href="javascript:;">取消订单</a></p>}
+                    <p><a onClick={() => router.push(`/authorize/order/${item.id}`)} href="javascript:;">查看详情</a></p>
+                    {item.orderState === 1 && <p><a onClick={() => handleCloseOrder(item.id)} href="javascript:;">取消订单</a></p>}
                     {[2,3,4,5].includes(item.orderState) && <p><a href="javascript:;">再次购买</a></p>}
                     {[4,5].includes(item.orderState) && <p><a href="javascript:;">申请售后</a></p>}
                   </div>
                 </div>
+                {/* 取消订单 */}
+                <OrderClose ref={orderCloseRef} order={orderId} />
               </div>
             )
           })
