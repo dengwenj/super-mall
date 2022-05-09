@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { ElSteps, ElStep } from 'element-plus'
 
 import DetailAction from './components/detail-action/index.vue'
+import Detaillogistics from './components/detail-logistics/index.vue'
 
 import { getOrderDetail } from '@/services/api/order'
 
@@ -55,6 +56,7 @@ onMounted(async () => {
       </ElStep>
     </ElSteps>
     <!-- 物流栏 -->
+    <Detaillogistics :order="order" /> 
     <!-- 订单商品信息 -->
   </div>
 </template>

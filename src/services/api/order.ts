@@ -58,3 +58,10 @@ export const deleteOrder = (ids: string[]) => {
     }
   })
 }
+
+export const orderLogistics = (id: string) => {
+  return request({
+    method: 'GET',
+    url: `/member/order/${id}/logistics`
+  })
+}
