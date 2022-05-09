@@ -22,9 +22,33 @@ console.log(props.order);
         <p>下单时间：{{ order.createTime }}</p>
       </div>
       <div class="btn">
-        <WwButton type="primary" size="small">评价商品</WwButton>
-        <WwButton type="plain" size="small">再次购买</WwButton>
-        <WwButton type="gray" size="small">申请售后</WwButton>
+        <!-- 待付款 -->
+        <template v-if="order.orderState === 1">
+          <WwButton @click="$router.push('/authorize/pay?id='+order.id)" type="primary" size="small">立即付款</WwButton>
+          <WwButton type="gray" size="small">取消订单</WwButton>
+        </template>
+        <!-- 待发货 -->
+        <template v-if="order.orderState === 2">
+          <WwButton type="primary" size="small">再次购买</WwButton>
+        </template>
+        <!-- 待收货 -->
+        <template v-if="order.orderState === 3">
+          <WwButton type="primary" size="small">确认收货</WwButton>
+          <WwButton type="plain" size="small">再次购买</WwButton>
+        </template>
+        <!-- 待评价 -->
+        <template v-if="order.orderState === 4">
+          <WwButton type="primary" size="small">再次购买</WwButton>
+          <WwButton type="plain" size="small">评价商品</WwButton>
+          <WwButton type="gray" size="small">申请售后</WwButton>
+        </template>
+        <!-- 已完成 -->
+        <template v-if="order.orderState === 5">
+          <WwButton type="primary" size="small">再次购买</WwButton>
+          <WwButton type="plain" size="small">查看评价</WwButton>
+          <WwButton type="gray" size="small">申请售后</WwButton>
+        </template>
+        <!-- 已取消 -->
       </div>
     </div>
 </template>
