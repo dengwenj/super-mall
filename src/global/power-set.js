@@ -1,9 +1,3 @@
-/**
- * Find power-set of a set using BITWISE approach.
- *
- * @param {*[]} originalSet
- * @return {*[][]}
- */
 export default function bwPowerSet(originalSet) {
   const subSets = []
 
